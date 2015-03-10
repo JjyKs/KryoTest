@@ -3,7 +3,6 @@ package com.mygdx.Network.Shared;
 import com.esotericsoftware.kryo.Kryo;
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.EndPoint;
 import java.util.ArrayList;
-import java.util.HashSet;
 
 // This class is a convenient place to keep things common to both the client and server.
 public class Network {
@@ -25,6 +24,8 @@ public class Network {
         kryo.register(AskForTick.class);
         kryo.register(java.util.ArrayList.class);
         kryo.register(AskForMap.class);
+        kryo.register(SendDialogue.class);
+        kryo.register(DialogueAnswer.class);
     }
 
     static public class Login {
@@ -42,6 +43,7 @@ public class Network {
     }
 
     static public class UpdateCharacter {
+
         public String message;
     }
 
@@ -51,12 +53,23 @@ public class Network {
     }
 
     static public class PlayerList {
+
         public ArrayList<PlayerOverNetwork> playerList;
     }
 
     static public class AskForTick {
     }
 
-    static public class AskForMap {        
+    static public class AskForMap {
+    }
+
+    static public class SendDialogue {
+
+        Dialogue dialogue;
+    }
+
+    static public class DialogueAnswer {
+
+        int id;
     }
 }

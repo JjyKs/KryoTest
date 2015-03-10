@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
+
+//PLACEHOLDER CLIENT FOR TESTING.
 public class KryoClient extends ApplicationAdapter {
 
     public KryoClient() {

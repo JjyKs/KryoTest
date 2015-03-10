@@ -10,37 +10,41 @@ public class BaseScript {
 
     long lastUpdated;       // Last time the script ran
     int updateTimer;        // How much the script waits before running again.
-    Player attachedPlayer;  // Player currently running this script. Must be manually attached
-    boolean blocksPlayerCommands; 
+    Player attachedPlayer;  // Player currently running this script.
+    boolean blocksPlayerCommands;
     boolean interruptible;  // Does player commands interrupt this script (follow etc. should be interruptible)
-    
+    boolean hasDialogue;    // Does this script allow other players to talk to you (Mainly for NPC purposes but who knows)
 
     public BaseScript() {
         updateTimer = 1000;
-        lastUpdated = System.currentTimeMillis(); 
+        lastUpdated = System.currentTimeMillis();
         blocksPlayerCommands = false;
         interruptible = true;
     }
-    
-    public boolean isBlocking(){
+
+    public boolean isBlocking() {
         return blocksPlayerCommands;
     }
-    
-    public boolean isInterruptible(){
+
+    public boolean isInterruptible() {
         return interruptible;
     }
-    
+
     public BaseScript(Player player) {
         this();
         attachedPlayer = player;
     }
 
+    public void onTalk() {
+        
+    }
+
     public void onUpdate() {
         lastUpdated = System.currentTimeMillis();
         //Extend this method for the functionality you want.
-    }   
-    
-    protected boolean enoughTimePassedForUpdate(){
+    }
+
+    protected boolean enoughTimePassedForUpdate() {
         return lastUpdated < System.currentTimeMillis() - updateTimer;
     }
 }
