@@ -3,6 +3,7 @@ package com.mygdx.Network.Server;
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Connection;
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Server;
 import com.mygdx.Network.Server.DataStructureHandlers.PlayerHandler;
+import com.mygdx.Network.Server.Scripts.Daniel;
 import com.mygdx.Network.Shared.Network;
 import com.mygdx.Network.Shared.Player;
 import com.mygdx.Network.Shared.PlayerOverNetwork;
@@ -53,8 +54,6 @@ public class MessageHandler extends Thread {
         c.character = character;
         loggedIn.add(character);
     }
-    
-    
 
     public void run() {
         while (true) {
@@ -122,7 +121,7 @@ public class MessageHandler extends Thread {
                 character.message = "";
                 character.x = 0;
                 character.y = 0;
-
+                character.script = new Daniel(character);
                 loggedIn(connection, character);
                 return;
             }
@@ -132,6 +131,12 @@ public class MessageHandler extends Thread {
                 // Ignore if not logged in.
                 if (character == null) {
                     return;
+                } else if (character.script != null) {
+                    if (character.script.isBlocking()) {
+                        return;
+                    } else if (character.script.isInterruptible()) {
+                        character.script = null;
+                    }
                 }
 
                 Network.MoveCharacter msg = (Network.MoveCharacter) object;

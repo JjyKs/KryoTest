@@ -1,7 +1,7 @@
 package com.mygdx.Network.Server;
 
 import com.mygdx.Network.Server.DataStructureHandlers.PlayerHandler;
-import com.mygdx.Network.Server.NPCScripts.Daniel;
+import com.mygdx.Network.Server.Scripts.Daniel;
 import com.mygdx.Network.Shared.Map;
 import com.mygdx.Network.Shared.Player;
 import java.util.Set;
@@ -71,22 +71,22 @@ public class ServerLoop extends Thread {
         }
     }
 
-    public void movePlayer(Player p, Map map) {
+    public void movePlayer(Player p, Map map, int amount) {
         if (p.x < p.xTarget && map.map[(p.x + 33) / 32][(p.y) / 32].walkable) {
-            PlayerHandler.movePlayer(p, 1, 0);
-            p.x++;
+            PlayerHandler.movePlayer(p, amount, 0);
+            p.x += amount;
         }
         if (p.x >= 32 && p.x > p.xTarget && map.map[(p.x - 33) / 32][(p.y) / 32].walkable) {
-            PlayerHandler.movePlayer(p, -1, 0);
-            p.x--;
+            PlayerHandler.movePlayer(p, -amount, 0);
+            p.x -= amount;
         }
         if (p.y < p.yTarget && map.map[(p.x) / 32][(p.y + 33) / 32].walkable) {
-            PlayerHandler.movePlayer(p, 0, 1);
-            p.y++;
+            PlayerHandler.movePlayer(p, 0, amount);
+            p.y += amount;
         }
         if (p.y >= 32 && p.y > p.yTarget && map.map[(p.x) / 32][(p.y - 33) / 32].walkable) {
-            PlayerHandler.movePlayer(p, 0, -1);
-            p.y--;
+            PlayerHandler.movePlayer(p, 0, -amount);
+            p.y -= amount;
         }
     }
 
@@ -95,20 +95,18 @@ public class ServerLoop extends Thread {
         Player daniel = new Player();
         daniel.name = "Daniel";
         daniel.npc = true;
-        daniel.script = new Daniel();
-        daniel.script.setAttachedPlayer(daniel);
+        daniel.script = new Daniel(daniel);
         PlayerHandler.addPlayer(daniel);
         loggedIn.add(daniel);
 
         while (true) {
             long startTime = System.nanoTime();
-            for (int i = 0; i < 2; i++) {
-                for (Player p : loggedIn) {
-                    hideOldMessages(p);
-                    fixPlayerTargetToGrid(p);
-                    movePlayer(p, map);
-                }
+            for (Player p : loggedIn) {
+                hideOldMessages(p);
+                fixPlayerTargetToGrid(p);
+                movePlayer(p, map, 2);
             }
+
             long endTime = System.nanoTime();
             long durationInMs = TimeUnit.NANOSECONDS.toMillis(endTime - startTime);
             if (durationInMs > 0) {

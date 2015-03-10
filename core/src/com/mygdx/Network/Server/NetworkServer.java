@@ -53,8 +53,10 @@ public class NetworkServer {
             public void disconnected(Connection c) {
                 CharacterConnection connection = (CharacterConnection) c;
                 if (connection.character != null) {
+                    System.out.println("REMOVE");
                     PlayerHandler.removePlayer(connection.character);
                     loggedIn.remove(connection.character);
+                    System.out.println(loggedIn.size());                    
                 }
             }
         });

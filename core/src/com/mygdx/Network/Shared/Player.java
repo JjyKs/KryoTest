@@ -1,6 +1,6 @@
 package com.mygdx.Network.Shared;
 
-import com.mygdx.Network.Server.NPCScripts.BaseScript;
+import com.mygdx.Network.Server.Scripts.BaseScript;
 
 public class Player {
     public String name;

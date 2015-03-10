@@ -8,6 +8,8 @@ import java.util.Collections;
  *
  * @author Jyri
  */
+
+// TODO, REWORK WHOLE CLASS. It's working but very messy hack quickly thrown together.
 public class PathFinder {
 
     public ArrayList<Tile> routeToFollow = new ArrayList();
@@ -23,7 +25,6 @@ public class PathFinder {
 
     public void searchRoute(int oldX, int oldY, int x, int y) {
         routeToFollow.clear();
-        System.out.println("Target " + x + " " + y);
         tilet = new ArrayList<Tile>();
         for (int i = 0; i < 320; i++) {
             for (int ii = 0; ii < 320; ii++) {
@@ -68,7 +69,6 @@ public class PathFinder {
                 break;
             }
             if (map[targetX][targetY].edellinen != null) {
-                System.out.println(calculator);
                 break;
             }
         }

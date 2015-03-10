@@ -30,7 +30,6 @@ public class PlayerHandler {
         //Todo, overflow protection        
         players[p.x / 10][p.y / 10].remove(p.name);
         players[(p.x + x) / 10][(p.y + y) / 10].put(p.name, p);
-
     }
 
     public static void addPlayer(Player p) {
@@ -39,19 +38,19 @@ public class PlayerHandler {
     }
 
     public static void removePlayer(Player p) {
-        //Todo, overflow protection        
-        players[p.x / 10][p.y / 10].remove(p.name);
+        //Todo, overflow protection     
 
+        players[p.x / 10][p.y / 10].remove(p.name);
     }
 
     public static boolean isValidPosition(int x, int y) {
         return (x >= 0 && x < 1024 && y >= 0 && y < 1024);
     }
 
-    static void getPlayerFromSlot(int x, int y, HashSet<Player> toReturn) {
+    static void getPlayersFromSlot(int x, int y, HashSet<Player> toReturn) {
         if (isValidPosition(x, y)) {
             for (Player p : players[x][y].values()) {
-                if (p.npc) {
+                if (p.script != null) {
                     p.script.onUpdate();
                 }
                 toReturn.add(p);
@@ -78,7 +77,7 @@ public class PlayerHandler {
             if (suunta == 1) {
                 int target = x - amount;
                 while (x > target) {
-                    getPlayerFromSlot(x, y, toReturn);
+                    getPlayersFromSlot(x, y, toReturn);
                     x--;
                 }
                 suunta++;
@@ -87,7 +86,7 @@ public class PlayerHandler {
             if (suunta == 2) {
                 int target = y - amount;
                 while (y > target) {
-                    getPlayerFromSlot(x, y, toReturn);
+                    getPlayersFromSlot(x, y, toReturn);
                     y--;
                 }
                 suunta++;
@@ -97,7 +96,7 @@ public class PlayerHandler {
             if (suunta == 3) {
                 int target = x + amount;
                 while (x < target) {
-                    getPlayerFromSlot(x, y, toReturn);
+                    getPlayersFromSlot(x, y, toReturn);
                     x++;
                 }
                 suunta++;
@@ -105,7 +104,7 @@ public class PlayerHandler {
             if (suunta == 4) {
                 int target = y + amount;
                 while (y < target) {
-                    getPlayerFromSlot(x, y, toReturn);
+                    getPlayersFromSlot(x, y, toReturn);
                     y++;
                 }
                 suunta = 1;
