@@ -2,7 +2,6 @@ package com.mygdx.Network.Server.MessageHandlers.Protocol;
 
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Connection;
 import com.mygdx.Network.Server.Misc.CharacterConnection;
-import com.mygdx.Network.Server.Scripts.Daniel;
 import com.mygdx.Network.Shared.Network;
 import com.mygdx.Network.Shared.Player;
 

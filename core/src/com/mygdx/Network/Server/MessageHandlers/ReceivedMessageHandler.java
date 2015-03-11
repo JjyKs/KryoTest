@@ -15,14 +15,14 @@ public class ReceivedMessageHandler extends Thread {
     ConcurrentHashMap<String, Player> loggedIn;
     Map map;
     Server server;
-    MessageOperator sorter;
+    MessageOperator operator;
 
     public ReceivedMessageHandler(BlockingQueue<QueuedMessage> receivedMessages, ConcurrentHashMap<String, Player> loggedIn, Map map, Server server) {
         this.receivedMessages = receivedMessages;
         this.loggedIn = loggedIn;
         this.map = map;
         this.server = server;
-        sorter = new MessageOperator(loggedIn, map, server);
+        operator = new MessageOperator(loggedIn, map, server);
     }
 
     public void start() {
@@ -36,7 +36,6 @@ public class ReceivedMessageHandler extends Thread {
     }
 
     public void run() {
-
         while (true) {
             getMessages();
         }
@@ -45,7 +44,7 @@ public class ReceivedMessageHandler extends Thread {
     public void getMessages() {
         try {
             QueuedMessage message = receivedMessages.take();
-            sorter.process(message.object, message.c);
+            operator.process(message.object, message.c);
 
         } catch (InterruptedException ex) {
         }

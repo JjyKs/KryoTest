@@ -44,17 +44,17 @@ public class MessageOperator {
     }
 
     public void process(Object object, Connection c) {
-        if (object instanceof Network.Login) {
+        if (object instanceof Network.Login) {                  //Login
             Login.process(c, this, object);
-        } else if (object instanceof Network.Register) {
+        } else if (object instanceof Network.Register) {        //Register
             Register.process(c, this, object);
-        } else if (object instanceof Network.MoveCharacter) {
+        } else if (object instanceof Network.MoveCharacter) {   //MoveCharacter
             MoveCharacter.process(c, this, object);
-        } else if (object instanceof Network.UpdateCharacter) {
+        } else if (object instanceof Network.UpdateCharacter) { //UpdateCharacter
             UpdateCharacter.process(c, object);
-        } else if (object instanceof Network.TalkTo) {
+        } else if (object instanceof Network.TalkTo) {          //TalkTo (RequestDialog)
             TalkTo.process(c, this, object);
-        } else if (object instanceof Network.AskForTick) {
+        } else if (object instanceof Network.AskForTick) {      //AskForTick
             AskForTick.process(c, this, object);
         }
     }
