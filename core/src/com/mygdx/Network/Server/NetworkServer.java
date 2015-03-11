@@ -1,5 +1,9 @@
 package com.mygdx.Network.Server;
 
+import com.mygdx.Network.Server.MessageHandlers.QueuedMessage;
+import com.mygdx.Network.Server.Misc.CharacterConnection;
+import com.mygdx.Network.Server.MessageHandlers.ReceivedMessageHandler;
+import com.mygdx.Network.Server.MessageHandlers.SentMessageHandler;
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Connection;
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Listener;
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Server;
@@ -18,7 +22,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NetworkServer {
 
     Server server;
-    Set<Player> loggedIn = Collections.newSetFromMap(new ConcurrentHashMap<Player, Boolean>());
+    //Set<Player> loggedIn = Collections.newSetFromMap(new ConcurrentHashMap<Player, Boolean>());
+    ConcurrentHashMap loggedIn = new ConcurrentHashMap<Player, Boolean>();
     Map map = new Map();
     BlockingQueue<QueuedMessage> receivedMessages = new ArrayBlockingQueue(10240);
 
@@ -56,8 +61,8 @@ public class NetworkServer {
                     System.out.println("REMOVE");
                     PlayerHandler.removePlayer(connection.character);
                     loggedIn.remove(connection.character);
-                    System.out.println(loggedIn.size());                    
-                }
+                    System.out.println(loggedIn.size()); 
+               }
             }
         });
         server.bind(Network.portTCP, Network.portUDP);
@@ -69,8 +74,11 @@ public class NetworkServer {
         ServerLoop serverLoop = new ServerLoop(loggedIn, map);
         serverLoop.start();
 
-        MessageHandler messageHandler = new MessageHandler(receivedMessages, loggedIn, map, server);
+        ReceivedMessageHandler messageHandler = new ReceivedMessageHandler(receivedMessages, loggedIn, map, server);
         messageHandler.start();
+
+        SentMessageHandler sentMessageHandler = new SentMessageHandler();
+        sentMessageHandler.start();
     }
 
     public static void main(String[] args) throws IOException {
@@ -79,10 +87,4 @@ public class NetworkServer {
         Log.set(Log.LEVEL_NONE);
         new NetworkServer();
     }
-}
-
-// This holds per connection state.
-class CharacterConnection extends Connection {
-
-    public Player character;
 }

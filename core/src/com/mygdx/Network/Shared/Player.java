@@ -1,5 +1,6 @@
 package com.mygdx.Network.Shared;
 
+import com.mygdx.Network.Server.Misc.CharacterConnection;
 import com.mygdx.Network.Server.Scripts.BaseScript;
 
 public class Player {
@@ -12,4 +13,5 @@ public class Player {
     public int tickRate;
     public boolean npc;
     public BaseScript script;    
+    public CharacterConnection connection;
 }

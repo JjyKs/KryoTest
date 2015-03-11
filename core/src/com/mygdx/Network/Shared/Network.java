@@ -24,8 +24,10 @@ public class Network {
         kryo.register(AskForTick.class);
         kryo.register(java.util.ArrayList.class);
         kryo.register(AskForMap.class);
+        kryo.register(Dialogue.class);
         kryo.register(SendDialogue.class);
         kryo.register(DialogueAnswer.class);
+        kryo.register(TalkTo.class);
     }
 
     static public class Login {
@@ -65,11 +67,16 @@ public class Network {
 
     static public class SendDialogue {
 
-        Dialogue dialogue;
+        public Dialogue dialogue;
     }
 
     static public class DialogueAnswer {
 
-        int id;
+        public int id;
+    }
+
+    static public class TalkTo {
+
+        public String name;
     }
 }

@@ -5,16 +5,17 @@ import com.mygdx.Network.Server.Scripts.Daniel;
 import com.mygdx.Network.Shared.Map;
 import com.mygdx.Network.Shared.Player;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
 public class ServerLoop extends Thread {
 
     private Thread t;
-    Set<Player> loggedIn;
+    ConcurrentHashMap<String, Player> loggedIn;
     Map map;
     private String threadName = "serverLoop";
 
-    public ServerLoop(Set<Player> loggedIn, Map map) {
+    public ServerLoop(ConcurrentHashMap<String, Player>  loggedIn, Map map) {
         this.loggedIn = loggedIn;
         this.map = map;
     }
@@ -97,11 +98,11 @@ public class ServerLoop extends Thread {
         daniel.npc = true;
         daniel.script = new Daniel(daniel);
         PlayerHandler.addPlayer(daniel);
-        loggedIn.add(daniel);
+        loggedIn.put(daniel.name, daniel);
 
         while (true) {
             long startTime = System.nanoTime();
-            for (Player p : loggedIn) {
+            for (Player p : loggedIn.values()) {
                 hideOldMessages(p);
                 fixPlayerTargetToGrid(p);
                 movePlayer(p, map, 2);
