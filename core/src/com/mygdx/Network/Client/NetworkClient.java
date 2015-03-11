@@ -12,6 +12,8 @@ import com.mygdx.Network.Shared.Network.MoveCharacter;
 import com.mygdx.Network.Shared.Network.PlayerList;
 import com.mygdx.Network.Shared.Network.Register;
 import com.mygdx.Network.Shared.Network.RegistrationRequired;
+import com.mygdx.Network.Shared.Network.SendDialogue;
+import com.mygdx.Network.Shared.Network.TalkTo;
 import com.mygdx.Network.Shared.Network.UpdateCharacter;
 import java.io.IOException;
 import java.util.HashSet;
@@ -49,6 +51,13 @@ public class NetworkClient {
                     return;
                 }
 
+                if (object instanceof SendDialogue) {
+                    SendDialogue msg = (SendDialogue) object;
+                    System.out.println(msg.dialogue);
+                    System.out.println(msg.dialogue.message);
+                    return;
+                }
+
             }
 
             public void disconnected(Connection connection) {
@@ -58,7 +67,7 @@ public class NetworkClient {
         }));
 
         //String host = JOptionPane.showInputDialog("IP: ");
-        String host = "localhost"; 
+        String host = "localhost";
         //host = "91.157.225.183"; //Localhostin ulkoinen
         try {
             client.connect(10000, host, Network.portTCP, Network.portUDP);
@@ -101,9 +110,18 @@ public class NetworkClient {
     }
 
     public void sendMessage(String message) {
-        UpdateCharacter msg = new UpdateCharacter();
-        msg.message = message;
-        client.sendUDP(msg);
+        System.out.println(message);
+        if (message.contains("TALK")) {
+            TalkTo msg = new TalkTo();
+            msg.name = "Daniel";
+            client.sendUDP(msg);
+            System.out.println("DialogueAskSent");
+        } else {
+            UpdateCharacter msg = new UpdateCharacter();
+            msg.message = message;
+            client.sendUDP(msg);
+        }
+
     }
 
     public static void main(String[] args) {

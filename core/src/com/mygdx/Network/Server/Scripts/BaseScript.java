@@ -1,6 +1,11 @@
 package com.mygdx.Network.Server.Scripts;
 
+import com.mygdx.Network.Server.MessageHandlers.QueuedMessage;
+import com.mygdx.Network.Server.MessageHandlers.SentMessageHandler;
+import com.mygdx.Network.Shared.Dialogue;
+import com.mygdx.Network.Shared.Network;
 import com.mygdx.Network.Shared.Player;
+import java.util.ArrayList;
 
 /**
  *
@@ -20,6 +25,7 @@ public class BaseScript {
         lastUpdated = System.currentTimeMillis();
         blocksPlayerCommands = false;
         interruptible = true;
+        hasDialogue = true;
     }
 
     public boolean isBlocking() {
@@ -29,14 +35,25 @@ public class BaseScript {
     public boolean isInterruptible() {
         return interruptible;
     }
+    
+    public boolean hasDialogue() {
+        return hasDialogue;
+    }
 
     public BaseScript(Player player) {
         this();
         attachedPlayer = player;
     }
 
-    public void onTalk() {
+    public void onTalk(Player target) {
+        Network.SendDialogue msg = new Network.SendDialogue();
+        msg.dialogue = new Dialogue();
+        msg.dialogue.message = "DEBUG: BaseScript talking";
+        msg.dialogue.answers = new ArrayList();
+        msg.dialogue.answers.add("Continue..");
         
+        QueuedMessage toSend = new QueuedMessage(target.connection, msg);
+        SentMessageHandler.receivedMessages.add(toSend);
     }
 
     public void onUpdate() {

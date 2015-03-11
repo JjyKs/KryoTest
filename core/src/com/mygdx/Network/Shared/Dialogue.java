@@ -7,6 +7,6 @@ import java.util.ArrayList;
  * @author Jyri
  */
 public class Dialogue {
-    ArrayList<String> answers;
-    String message;
+    public ArrayList<String> answers;
+    public String message;
 }
