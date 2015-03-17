@@ -28,8 +28,12 @@ public class PlayerHandler {
 
     public static void movePlayer(Player p, int x, int y) {
         //Todo, overflow protection        
-        players[p.x / 10][p.y / 10].remove(p.name);
-        players[(p.x + x) / 10][(p.y + y) / 10].put(p.name, p);
+        if (players[p.x / 10][p.y / 10].get(p.name) != null) {
+            players[p.x / 10][p.y / 10].remove(p.name);
+            players[(p.x + x) / 10][(p.y + y) / 10].put(p.name, p);
+            p.x += x;
+            p.y += y;
+        }
     }
 
     public static void addPlayer(Player p) {
@@ -39,8 +43,14 @@ public class PlayerHandler {
 
     public static void removePlayer(Player p) {
         //Todo, overflow protection     
-
-        players[p.x / 10][p.y / 10].remove(p.name);
+        if (players[p.x / 10][p.y / 10].get(p.name) != null) {
+            players[p.x / 10][p.y / 10].remove(p.name);
+            if (players[p.x / 10][p.y / 10].get(p.name) != null) {
+                System.out.println("Fatal: player remove failed -- 2");
+            }
+        } else {
+            System.out.println("Fatal: player remove failed");
+        }
     }
 
     public static boolean isValidPosition(int x, int y) {

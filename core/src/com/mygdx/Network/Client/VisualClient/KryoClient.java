@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.mygdx.Network.Client.GameLogic;
+import static com.mygdx.Network.Client.GameLogic.randInt;
 import com.mygdx.Network.Client.GameState;
 import com.mygdx.Network.Client.NetworkClient;
 import com.mygdx.Network.Client.PathFinder;
@@ -17,7 +18,6 @@ import com.mygdx.Network.Shared.Player;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
-
 
 //PLACEHOLDER CLIENT FOR TESTING.
 public class KryoClient extends ApplicationAdapter {
@@ -54,6 +54,13 @@ public class KryoClient extends ApplicationAdapter {
 
     boolean mouseDown = false;
 
+    public void simulatePlayer() {
+        if (worldHandler.routeToFollow.isEmpty() && state.currentPlayer.x == state.currentPlayer.xTarget && state.currentPlayer.y == state.currentPlayer.y) {
+            worldHandler.searchRoute(state.currentPlayer.x / 32, state.currentPlayer.y / 32, state.currentPlayer.xTarget = randInt(0, 40), state.currentPlayer.yTarget = randInt(0, 8));
+            game.newMoveCommandIssued = true;
+        }
+    }
+
     @Override
     public void render() {
         update();
@@ -69,6 +76,9 @@ public class KryoClient extends ApplicationAdapter {
         } else {
             mouseDown = false;
         }
+        
+        //simulatePlayer();
+
         if (inputProcessor.sendMessage) {
             inputProcessor.sendMessage = false;
             game.sendMessage(inputProcessor.message);

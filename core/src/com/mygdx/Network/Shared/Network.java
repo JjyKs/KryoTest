@@ -28,6 +28,7 @@ public class Network {
         kryo.register(SendDialogue.class);
         kryo.register(DialogueAnswer.class);
         kryo.register(TalkTo.class);
+        kryo.register(java.util.HashMap.class);
     }
 
     static public class Login {
@@ -72,6 +73,7 @@ public class Network {
 
     static public class DialogueAnswer {
 
+        public String name;
         public int id;
     }
 

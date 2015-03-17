@@ -35,12 +35,7 @@ public class GameLogic {
     public boolean newMoveCommandIssued = false;
 
     public void update() {
-        /*if (state.currentPlayer.x == state.currentPlayer.xTarget && state.currentPlayer.y == state.currentPlayer.y) {
-         state.currentPlayer.xTarget = randInt(0, 100);
-         state.currentPlayer.yTarget = randInt(0, 100);
-         network.movePlayer(state.currentPlayer.xTarget, state.currentPlayer.yTarget);
-         network.sendMessage();
-         }*/
+       
 
         boolean skipFirstChecks = state.currentPlayer.x == lastX && state.currentPlayer.y == lastY;
         if (newMoveCommandIssued) {
@@ -51,9 +46,6 @@ public class GameLogic {
         if (Math.abs(state.currentPlayer.x - state.currentPlayer.xTarget) < 20 || skipFirstChecks) {
             if (Math.abs(state.currentPlayer.y - state.currentPlayer.yTarget) < 20 || skipFirstChecks) {
                 if (worldHandler.routeToFollow.size() > 0) {
-                    System.out.println("ASD");
-                    System.out.println(worldHandler.routeToFollow.get(0).x);
-                    System.out.println(worldHandler.routeToFollow.get(0).y);
                     network.movePlayer(worldHandler.routeToFollow.get(0).x, worldHandler.routeToFollow.get(0).y);
                     worldHandler.routeToFollow.remove(0);
                 }

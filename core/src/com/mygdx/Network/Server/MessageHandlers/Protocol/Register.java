@@ -2,7 +2,6 @@ package com.mygdx.Network.Server.MessageHandlers.Protocol;
 
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Connection;
 import com.mygdx.Network.Server.Misc.CharacterConnection;
-import com.mygdx.Network.Server.Scripts.Daniel;
 import com.mygdx.Network.Shared.Network;
 import com.mygdx.Network.Shared.Player;
 
@@ -38,7 +37,6 @@ public class Register {
         character.message = "";
         character.x = 0;
         character.y = 0;
-        character.script = new Daniel(character);
         character.connection = connection;
         operator.loggedIn(connection, character);
     }

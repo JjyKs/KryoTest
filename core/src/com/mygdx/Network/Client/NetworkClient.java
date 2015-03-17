@@ -7,6 +7,7 @@ import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Listener.ThreadedL
 import com.esotericsoftware.minlog.Log;
 import com.mygdx.Network.Shared.Network;
 import com.mygdx.Network.Shared.Network.AskForTick;
+import com.mygdx.Network.Shared.Network.DialogueAnswer;
 import com.mygdx.Network.Shared.Network.Login;
 import com.mygdx.Network.Shared.Network.MoveCharacter;
 import com.mygdx.Network.Shared.Network.PlayerList;
@@ -53,8 +54,8 @@ public class NetworkClient {
 
                 if (object instanceof SendDialogue) {
                     SendDialogue msg = (SendDialogue) object;
-                    System.out.println(msg.dialogue);
                     System.out.println(msg.dialogue.message);
+                    System.out.println(msg.dialogue.answers.values());
                     return;
                 }
 
@@ -68,7 +69,7 @@ public class NetworkClient {
 
         //String host = JOptionPane.showInputDialog("IP: ");
         String host = "localhost";
-        //host = "91.157.225.183"; //Localhostin ulkoinen
+        //host = "91.157.237.40"; //Localhostin ulkoinen
         try {
             client.connect(10000, host, Network.portTCP, Network.portUDP);
             login();
@@ -116,6 +117,18 @@ public class NetworkClient {
             msg.name = "Daniel";
             client.sendUDP(msg);
             System.out.println("DialogueAskSent");
+        } else if (message.contains("1")) {
+            DialogueAnswer msg = new DialogueAnswer();
+            msg.name = "Daniel";
+            msg.id = 1;
+            client.sendUDP(msg);
+            System.out.println("DialogueAnswerSent");
+        } else if (message.contains("0")) {
+            DialogueAnswer msg = new DialogueAnswer();
+            msg.name = "Daniel";
+            msg.id = 0;
+            client.sendUDP(msg);
+            System.out.println("DialogueAnswerSent");
         } else {
             UpdateCharacter msg = new UpdateCharacter();
             msg.message = message;

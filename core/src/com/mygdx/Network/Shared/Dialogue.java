@@ -1,12 +1,12 @@
 package com.mygdx.Network.Shared;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  *
  * @author Jyri
  */
 public class Dialogue {
-    public ArrayList<String> answers;
+    public HashMap<Integer, String> answers;
     public String message;
 }

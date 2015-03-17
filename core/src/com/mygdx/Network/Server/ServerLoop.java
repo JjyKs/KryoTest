@@ -75,19 +75,15 @@ public class ServerLoop extends Thread {
     public void movePlayer(Player p, Map map, int amount) {
         if (p.x < p.xTarget && map.map[(p.x + 33) / 32][(p.y) / 32].walkable) {
             PlayerHandler.movePlayer(p, amount, 0);
-            p.x += amount;
         }
         if (p.x >= 32 && p.x > p.xTarget && map.map[(p.x - 33) / 32][(p.y) / 32].walkable) {
             PlayerHandler.movePlayer(p, -amount, 0);
-            p.x -= amount;
         }
         if (p.y < p.yTarget && map.map[(p.x) / 32][(p.y + 33) / 32].walkable) {
             PlayerHandler.movePlayer(p, 0, amount);
-            p.y += amount;
         }
         if (p.y >= 32 && p.y > p.yTarget && map.map[(p.x) / 32][(p.y - 33) / 32].walkable) {
             PlayerHandler.movePlayer(p, 0, -amount);
-            p.y -= amount;
         }
     }
 

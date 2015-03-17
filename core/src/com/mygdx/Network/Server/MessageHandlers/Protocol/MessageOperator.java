@@ -54,6 +54,8 @@ public class MessageOperator {
             UpdateCharacter.process(c, object);
         } else if (object instanceof Network.TalkTo) {          //TalkTo (RequestDialog)
             TalkTo.process(c, this, object);
+        } else if (object instanceof Network.DialogueAnswer) {  //Continue dialog
+            ContinueDialogue.process(c, this, object);
         } else if (object instanceof Network.AskForTick) {      //AskForTick
             AskForTick.process(c, this, object);
         }
