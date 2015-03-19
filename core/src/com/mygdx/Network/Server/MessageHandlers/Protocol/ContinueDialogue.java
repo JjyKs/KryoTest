@@ -6,7 +6,9 @@
 package com.mygdx.Network.Server.MessageHandlers.Protocol;
 
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Connection;
+import static com.mygdx.Network.Server.MessageHandlers.Protocol.TalkTo.targetIsValid;
 import com.mygdx.Network.Server.Misc.CharacterConnection;
+import com.mygdx.Network.Server.Scripts.BaseScript;
 import com.mygdx.Network.Shared.Network;
 import com.mygdx.Network.Shared.Player;
 
@@ -20,8 +22,13 @@ public class ContinueDialogue {
         return Math.abs(source.x - target.x) <= 32 && Math.abs(source.y - target.y) <= 32;
     }
 
-    public static boolean targetHasDialogue(Player target) {
-        return target.script != null && target.script.hasDialogue();
+     public static boolean targetHasDialogue(Player target) {
+        for (BaseScript script : target.scripts) {
+            if (script.hasDialogue()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static boolean targetIsValid(Player source, Player target) {
@@ -41,7 +48,9 @@ public class ContinueDialogue {
         Player target = operator.loggedIn.get(msg.name);
 
         if (targetIsValid(character, target)) {
-            target.script.onAnswer(character, msg.id);
+            for (BaseScript script : target.scripts) {
+               script.onAnswer(character, msg.id);               
+            }
         }
     }
 }

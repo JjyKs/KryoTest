@@ -2,6 +2,7 @@ package com.mygdx.Network.Server;
 
 import com.mygdx.Network.Server.DataStructureHandlers.PlayerHandler;
 import com.mygdx.Network.Server.Scripts.Daniel;
+import com.mygdx.Network.Server.Scripts.Test;
 import com.mygdx.Network.Shared.Map;
 import com.mygdx.Network.Shared.Player;
 import java.util.Set;
@@ -92,7 +93,8 @@ public class ServerLoop extends Thread {
         Player daniel = new Player();
         daniel.name = "Daniel";
         daniel.npc = true;
-        daniel.script = new Daniel(daniel);
+        daniel.scripts.add(new Daniel(daniel));
+        daniel.scripts.add(new Test(daniel));
         PlayerHandler.addPlayer(daniel);
         loggedIn.put(daniel.name, daniel);
 

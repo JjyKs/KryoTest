@@ -1,6 +1,7 @@
 package com.mygdx.Network.Server.MessageHandlers.Protocol;
 
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Connection;
+import com.mygdx.Network.Server.Helpers.ScriptHelper;
 import com.mygdx.Network.Server.Misc.CharacterConnection;
 import com.mygdx.Network.Shared.Network;
 import com.mygdx.Network.Shared.Player;
@@ -17,12 +18,11 @@ public class MoveCharacter {
         // Ignore if not logged in.
         if (character == null) {
             return;
-        } else if (character.script != null) {
-            if (character.script.isBlocking()) {
-                return;
-            } else if (character.script.isInterruptible()) {
-                character.script = null;
-            }
+        }
+        
+        //If script blocks playermovement, we shouldn't process this packet
+        if (ScriptHelper.hasBlockingScript(character)){
+            return;
         }
 
         Network.MoveCharacter msg = (Network.MoveCharacter) object;

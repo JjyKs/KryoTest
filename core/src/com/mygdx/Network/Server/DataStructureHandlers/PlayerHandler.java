@@ -1,5 +1,6 @@
 package com.mygdx.Network.Server.DataStructureHandlers;
 
+import com.mygdx.Network.Server.Helpers.ScriptHelper;
 import com.mygdx.Network.Shared.Player;
 import java.util.HashSet;
 
@@ -59,10 +60,9 @@ public class PlayerHandler {
 
     static void getPlayersFromSlot(int x, int y, HashSet<Player> toReturn) {
         if (isValidPosition(x, y)) {
-            for (Player p : players[x][y].values()) {
-                if (p.script != null) {
-                    p.script.onUpdate();
-                }
+            for (Player p : players[x][y].values()) {                
+                //We're updating playerscripts here, so it will only happen when somebody has actual vision of this player.
+                ScriptHelper.updateScripts(p);
                 toReturn.add(p);
             }
         }

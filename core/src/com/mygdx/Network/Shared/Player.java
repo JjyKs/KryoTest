@@ -2,6 +2,7 @@ package com.mygdx.Network.Shared;
 
 import com.mygdx.Network.Server.Misc.CharacterConnection;
 import com.mygdx.Network.Server.Scripts.BaseScript;
+import java.util.ArrayList;
 
 public class Player {
     public String name;
@@ -12,6 +13,6 @@ public class Player {
     public long lastMessage;
     public int tickRate;
     public boolean npc;
-    public BaseScript script;    
+    public ArrayList<BaseScript> scripts = new ArrayList();
     public CharacterConnection connection;
 }
