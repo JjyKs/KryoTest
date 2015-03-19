@@ -3,6 +3,7 @@ package com.mygdx.Network.Server.MessageHandlers.Protocol;
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Connection;
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Server;
 import com.mygdx.Network.Server.DataStructureHandlers.PlayerHandler;
+import com.mygdx.Network.Server.Helpers.NewPlayerInitiator;
 import com.mygdx.Network.Server.Misc.CharacterConnection;
 import com.mygdx.Network.Shared.Map;
 import com.mygdx.Network.Shared.Network;
@@ -41,6 +42,7 @@ public class MessageOperator {
         c.character = character;
 
         loggedIn.put(character.name, character);
+        NewPlayerInitiator.initPlayer(character);
     }
 
     public void process(Object object, Connection c) {
@@ -58,6 +60,8 @@ public class MessageOperator {
             ContinueDialogue.process(c, this, object);
         } else if (object instanceof Network.AskForTick) {      //AskForTick
             AskForTick.process(c, this, object);
+        } else if (object instanceof Network.StartFight) {      
+            StartFight.process(c, this, object);
         }
     }
 }

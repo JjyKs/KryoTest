@@ -14,6 +14,7 @@ import com.mygdx.Network.Shared.Network.PlayerList;
 import com.mygdx.Network.Shared.Network.Register;
 import com.mygdx.Network.Shared.Network.RegistrationRequired;
 import com.mygdx.Network.Shared.Network.SendDialogue;
+import com.mygdx.Network.Shared.Network.StartFight;
 import com.mygdx.Network.Shared.Network.TalkTo;
 import com.mygdx.Network.Shared.Network.UpdateCharacter;
 import java.io.IOException;
@@ -112,6 +113,12 @@ public class NetworkClient {
 
     public void sendMessage(String message) {
         System.out.println(message);
+         if (message.contains("FIGHT")) {
+            StartFight msg = new StartFight();
+            msg.name = "Daniel";
+            client.sendUDP(msg);
+            System.out.println("DialogueFightSent");
+        }
         if (message.contains("TALK")) {
             TalkTo msg = new TalkTo();
             msg.name = "Daniel";

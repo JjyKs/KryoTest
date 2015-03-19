@@ -28,6 +28,7 @@ public class Network {
         kryo.register(SendDialogue.class);
         kryo.register(DialogueAnswer.class);
         kryo.register(TalkTo.class);
+        kryo.register(StartFight.class);
         kryo.register(java.util.HashMap.class);
     }
 
@@ -81,4 +82,10 @@ public class Network {
 
         public String name;
     }
+
+    static public class StartFight {
+
+        public String name;
+    }
+
 }

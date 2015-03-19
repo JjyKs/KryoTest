@@ -12,14 +12,16 @@ public class Test extends BaseScript {
         super(player);
         interruptible = false;
         hasDialogue = false;
-        updateTimer = 6000;
+        updateTimer = 5000;
     }
 
     @Override
     public void onUpdate() {
-        if (enoughTimePassedForUpdate()) {
+        if (readyToRun()) {
             super.onUpdate();
-            attachedPlayer.message = "Moi";
+            Player attachedPlayer = attachedPlayers.get(0);
+            
+            attachedPlayer.message = "Moi: " + attachedPlayer.health;
             attachedPlayer.lastMessage = System.currentTimeMillis();
         }
     }

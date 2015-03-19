@@ -19,7 +19,7 @@ public class GameState {
         currentPlayer.name = name;
     }
 
-    public void setPlayerList(HashSet<PlayerOverNetwork> playerListFromServer) {     
+    public void setPlayerList(HashSet<PlayerOverNetwork> playerListFromServer) {
         playerList.clear();
         for (PlayerOverNetwork p : playerListFromServer) {
             if (p.name.equals(currentPlayer.name)) {
@@ -34,7 +34,7 @@ public class GameState {
             newPlayer.yTarget = p.yTarget;
             newPlayer.xTarget = p.xTarget;
             newPlayer.message = p.message;
-            
+
             newPlayer.timeToLive = 2;
             playerList.put(newPlayer.name, newPlayer);
         }
@@ -45,16 +45,25 @@ public class GameState {
             if (playerListToDraw.containsKey(p.name)) {
                 Player toDraw = playerListToDraw.get(p.name);
                 if (toDraw.x < p.x) {
-                    toDraw.x += Math.max(1, (p.x - toDraw.x) / 32);
+                    toDraw.x += Math.max(1, (p.x - toDraw.x) / 128);
                 } else if (toDraw.x > p.x) {
-                    toDraw.x -= Math.max(1, (toDraw.x - p.x) / 32);
+                    toDraw.x -= Math.max(1, (toDraw.x - p.x) / 128);
                 }
 
                 if (toDraw.y < p.y) {
-                    toDraw.y += Math.max(1, (p.y - toDraw.y) / 32);
+                    toDraw.y += Math.max(1, (p.y - toDraw.y) / 128);
                 } else if (toDraw.y > p.y) {
-                    toDraw.y -= Math.max(1, (toDraw.y - p.y) / 32);
+                    toDraw.y -= Math.max(1, (toDraw.y - p.y) / 128);
                 }
+                int maxWarpDistance = 4;
+                if (Math.abs(toDraw.x - p.x) > maxWarpDistance) {
+                    toDraw.x = p.x;
+                }
+
+                if (Math.abs(toDraw.y - p.y) > maxWarpDistance) {
+                    toDraw.y = p.y;
+                }
+
                 toDraw.message = p.message;
             } else {
                 playerListToDraw.put(p.name, p);

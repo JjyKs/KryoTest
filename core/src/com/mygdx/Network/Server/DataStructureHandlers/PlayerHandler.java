@@ -37,6 +37,15 @@ public class PlayerHandler {
         }
     }
 
+    public static void resetPlayer(Player p) {
+        removePlayer(p);
+        p.x = 0;
+        p.y = 0;
+        p.xTarget = 0;
+        p.yTarget = 0;
+        addPlayer(p);
+    }
+    
     public static void addPlayer(Player p) {
         //Todo, overflow protection        
         players[p.x / 10][p.y / 10].put(p.name, p);

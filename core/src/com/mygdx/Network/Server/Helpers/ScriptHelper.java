@@ -11,9 +11,19 @@ import java.util.Iterator;
 public class ScriptHelper {
 
     public static void updateScripts(Player character) {
-        for (BaseScript script : character.scripts){
-            script.onUpdate();
+        int startSize = character.scripts.size();
+        for (int i = 0; i < character.scripts.size(); i++) {
+            character.scripts.get(i).onUpdate();
+            if (character.scripts.get(i).hasPlayers().isEmpty()) {
+                character.scripts.remove(character.scripts.get(i));
+            }
+            if (character.scripts.size() != startSize) {
+                startSize = character.scripts.size();
+                i = -1;
+            }
+
         }
+
     }
 
     public static boolean hasBlockingScript(Player character) {

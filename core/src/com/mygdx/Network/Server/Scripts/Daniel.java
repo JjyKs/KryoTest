@@ -12,14 +12,17 @@ public class Daniel extends BaseScript {
     public Daniel(Player player) {
         super(player);
         updateTimer = 5000;
+        interruptible = true;
+        hasDialogue = true;
+        continuable = true;
     }
 
     @Override
     public void onUpdate() {
-        if (enoughTimePassedForUpdate()) {
+        if (readyToRun()) {
             super.onUpdate();
-            attachedPlayer.xTarget += 32;
-            attachedPlayer.yTarget += 32;
+            attachedPlayers.get(0).xTarget += 32;
+            attachedPlayers.get(0).yTarget += 32;
         }
     }
 
