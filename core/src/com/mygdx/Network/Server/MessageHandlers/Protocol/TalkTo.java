@@ -17,7 +17,7 @@ public class TalkTo {
     }
 
     public static boolean targetHasDialogue(Player target) {
-        for (BaseScript script : target.scripts) {
+        for (BaseScript script : target.variableTickedScripts) {
             if (script.hasDialogue()) {
                 return true;
             }
@@ -42,7 +42,7 @@ public class TalkTo {
         Player target = operator.loggedIn.get(msg.name);
 
         if (targetIsValid(character, target)) {
-            for (BaseScript script : target.scripts) {
+            for (BaseScript script : target.variableTickedScripts) {
                script.onTalk(character);               
             }
         }

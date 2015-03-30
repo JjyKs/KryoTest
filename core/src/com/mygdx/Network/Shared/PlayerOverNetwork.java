@@ -5,5 +5,6 @@ public class PlayerOverNetwork {
     public String message;
     public int x, y, xTarget, yTarget;   
     public int tickRate;
-    boolean npc;
+    public boolean npc;
+    public boolean fightable;
 }

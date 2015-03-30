@@ -1,6 +1,7 @@
 package com.mygdx.Network.Server.Scripts;
 
 import com.mygdx.Network.Server.Helpers.NewPlayerInitiator;
+import com.mygdx.Network.Server.Scripts.BaseScript;
 import com.mygdx.Network.Shared.Player;
 import java.util.ArrayList;
 import java.util.Random;
@@ -31,10 +32,4 @@ public class DeathCheck extends BaseScript {
             }
         }
     }
-
-    public int randInt(int min, int max) {
-        int randomNum = rand.nextInt((max - min) + 1) + min;
-        return randomNum;
-    }
-
 }

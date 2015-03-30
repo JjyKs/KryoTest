@@ -2,6 +2,7 @@ package com.mygdx.Network.Server.MessageHandlers.Protocol;
 
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Connection;
 import com.mygdx.Network.Server.DataStructureHandlers.PlayerHandler;
+import com.mygdx.Network.Server.Helpers.PlayerValidator;
 import com.mygdx.Network.Server.Misc.CharacterConnection;
 import com.mygdx.Network.Shared.Network;
 import com.mygdx.Network.Shared.Player;
@@ -14,11 +15,43 @@ import java.util.ArrayList;
  */
 public class AskForTick {
 
+    //Builds PlayerOverNetwork from provided player instance
+    private static PlayerOverNetwork buildPON(Player p) {
+        PlayerOverNetwork pon = new PlayerOverNetwork();
+        pon.name = p.name;
+        pon.message = p.message;
+        pon.x = p.x;
+        pon.y = p.y;
+        pon.xTarget = p.xTarget;
+        pon.yTarget = p.yTarget;
+        pon.npc = p.npc;
+        pon.fightable = p.fightable;
+
+        return pon;
+
+    }
+    
+    //Calculates new TickRate for player
+    
+    private static void setTick(Player character, int nearbyPlayerAmount, Connection c, PlayerOverNetwork pointerToPlayer){
+        character.tickRate = Math.max(4, nearbyPlayerAmount * 4) - c.getReturnTripTime() - 4;
+        if (character.tickRate > 1000) {
+            character.tickRate = 1000;
+        }
+        if (pointerToPlayer != null) {
+            pointerToPlayer.tickRate = character.tickRate;
+        }
+    }
+    
+    
+
     public static void process(Connection c, MessageOperator operator, Object object) {
         CharacterConnection connection = (CharacterConnection) c;
         Player character = connection.character;
+        
+
         // Ignore if not logged in.
-        if (character == null || character.lastTick + character.tickRate - 20 > System.currentTimeMillis()) {
+        if (PlayerValidator.isLoggedAndAllowedByTick(character)) {
             return;
         }
 
@@ -26,27 +59,21 @@ public class AskForTick {
 
         Network.PlayerList msg = new Network.PlayerList();
         msg.playerList = new ArrayList();
+        
+        //Player also receives his own information over network. However we don't want to tell info about other players to the asker.
         PlayerOverNetwork pointerToPlayer = null;
+        
+        
         for (Player p : PlayerHandler.returnClosePlayers(character, true)) {
-            msg.playerList.add(new PlayerOverNetwork());
-            msg.playerList.get(msg.playerList.size() - 1).name = p.name;
-            msg.playerList.get(msg.playerList.size() - 1).message = p.message;
-            msg.playerList.get(msg.playerList.size() - 1).x = p.x;
-            msg.playerList.get(msg.playerList.size() - 1).y = p.y;
-            msg.playerList.get(msg.playerList.size() - 1).xTarget = p.xTarget;
-            msg.playerList.get(msg.playerList.size() - 1).yTarget = p.yTarget;
+            //Adds PON instance build from Player to the answer packet.
+            msg.playerList.add(buildPON(p));
+
             if (p.name.equals(character.name)) {
                 pointerToPlayer = msg.playerList.get(msg.playerList.size() - 1);
             }
         }
-
-        character.tickRate = Math.max(4, msg.playerList.size() * 4) - c.getReturnTripTime() - 4;
-        if (character.tickRate > 1000) {
-            character.tickRate = 1000;
-        }
-        if (pointerToPlayer != null) {
-            pointerToPlayer.tickRate = character.tickRate;
-        }
+        
+        setTick(character, msg.playerList.size(), c, pointerToPlayer);
         operator.server.sendToUDP(connection.getID(), msg);
     }
 }

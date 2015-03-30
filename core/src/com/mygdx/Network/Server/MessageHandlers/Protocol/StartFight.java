@@ -17,7 +17,7 @@ public class StartFight {
     }
 
     public static boolean targetIsFightable(Player target) {
-        return true;
+        return target.fightable;
     }
 
     public static boolean targetIsValid(Player source, Player target) {
@@ -38,8 +38,8 @@ public class StartFight {
 
         if (targetIsValid(character, target)) {
             Fight fight = new Fight(character, target);
-            character.scripts.add(fight);
-            target.scripts.add(fight);
+            character.variableTickedScripts.add(fight);
+            target.variableTickedScripts.add(fight);
         }
     }
 }

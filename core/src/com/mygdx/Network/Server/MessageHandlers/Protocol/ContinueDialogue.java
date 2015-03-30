@@ -23,7 +23,7 @@ public class ContinueDialogue {
     }
 
      public static boolean targetHasDialogue(Player target) {
-        for (BaseScript script : target.scripts) {
+        for (BaseScript script : target.variableTickedScripts) {
             if (script.hasDialogue()) {
                 return true;
             }
@@ -48,7 +48,7 @@ public class ContinueDialogue {
         Player target = operator.loggedIn.get(msg.name);
 
         if (targetIsValid(character, target)) {
-            for (BaseScript script : target.scripts) {
+            for (BaseScript script : target.variableTickedScripts) {
                script.onAnswer(character, msg.id);               
             }
         }

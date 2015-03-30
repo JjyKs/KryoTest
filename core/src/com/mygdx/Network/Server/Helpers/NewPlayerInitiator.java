@@ -14,14 +14,14 @@ import com.mygdx.Network.Shared.Player;
 public class NewPlayerInitiator {
 
     static public void initPlayer(Player p) {
-        for (BaseScript s : p.scripts){
+        for (BaseScript s : p.variableTickedScripts){
             s.removePlayerFromScript(p);
         }        
-        p.scripts.clear();
+        p.variableTickedScripts.clear();
         p.health = 20;
-        p.scripts.add(new DeathCheck(p));
-        p.scripts.add(new Daniel(p));
-        p.scripts.add(new Test(p));
+        p.variableTickedScripts.add(new DeathCheck(p));
+        p.variableTickedScripts.add(new Daniel(p));
+        p.variableTickedScripts.add(new Test(p));
         PlayerHandler.resetPlayer(p);
     }
 }

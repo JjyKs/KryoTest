@@ -105,7 +105,7 @@ public class BaseScript {
                 interrupted = true;
             } else {
                 for (Player p : attachedPlayers) {
-                    p.scripts.remove(this);
+                    p.variableTickedScripts.remove(this);
                     this.attachedPlayers.clear();
                 }
             }
@@ -129,7 +129,7 @@ public class BaseScript {
                 } else {
                     boolean scriptReferenced = false;
                     for (Player p : interruptor.attachedPlayers) {
-                        if (p.scripts.contains(interruptor)) {
+                        if (p.variableTickedScripts.contains(interruptor)) {
                             scriptReferenced = true;
                         }
                     }

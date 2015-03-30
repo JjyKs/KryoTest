@@ -95,9 +95,9 @@ public class ServerLoop extends Thread {
         daniel.health = 5;
         daniel.name = "Daniel";
         daniel.npc = true;
-        daniel.scripts.add(new Daniel(daniel));
-        daniel.scripts.add(new Test(daniel));
-        daniel.scripts.add(new DeathCheck(daniel));
+        daniel.variableTickedScripts.add(new Daniel(daniel));
+        daniel.variableTickedScripts.add(new Test(daniel));
+        daniel.variableTickedScripts.add(new DeathCheck(daniel));
         PlayerHandler.addPlayer(daniel);
         loggedIn.put(daniel.name, daniel);
 

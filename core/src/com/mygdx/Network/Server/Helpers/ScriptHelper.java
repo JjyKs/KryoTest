@@ -11,14 +11,14 @@ import java.util.Iterator;
 public class ScriptHelper {
 
     public static void updateScripts(Player character) {
-        int startSize = character.scripts.size();
-        for (int i = 0; i < character.scripts.size(); i++) {
-            character.scripts.get(i).onUpdate();
-            if (character.scripts.get(i).hasPlayers().isEmpty()) {
-                character.scripts.remove(character.scripts.get(i));
+        int startSize = character.variableTickedScripts.size();
+        for (int i = 0; i < character.variableTickedScripts.size(); i++) {
+            character.variableTickedScripts.get(i).onUpdate();
+            if (character.variableTickedScripts.get(i).hasPlayers().isEmpty()) {
+                character.variableTickedScripts.remove(character.variableTickedScripts.get(i));
             }
-            if (character.scripts.size() != startSize) {
-                startSize = character.scripts.size();
+            if (character.variableTickedScripts.size() != startSize) {
+                startSize = character.variableTickedScripts.size();
                 i = -1;
             }
 
@@ -27,7 +27,7 @@ public class ScriptHelper {
     }
 
     public static boolean hasBlockingScript(Player character) {
-        for (Iterator<BaseScript> iterator = character.scripts.iterator(); iterator.hasNext();) {
+        for (Iterator<BaseScript> iterator = character.variableTickedScripts.iterator(); iterator.hasNext();) {
             BaseScript script = iterator.next();
             if (script != null) {
                 if (script.isBlocking()) {
@@ -39,5 +39,4 @@ public class ScriptHelper {
         }
         return false;
     }
-
 }

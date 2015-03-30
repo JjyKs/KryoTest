@@ -13,8 +13,6 @@ import com.mygdx.Network.Server.DataStructureHandlers.PlayerHandler;
 import com.mygdx.Network.Shared.Map;
 import com.mygdx.Network.Shared.Player;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.Set;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentHashMap;

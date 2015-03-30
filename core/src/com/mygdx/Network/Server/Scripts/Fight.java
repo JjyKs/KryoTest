@@ -26,7 +26,7 @@ public class Fight extends BaseScript {
     public void onUpdate() {
         if (firstRun) {
             for (Player player : attachedPlayers) {
-                for (BaseScript s : player.scripts) {
+                for (BaseScript s : player.variableTickedScripts) {
                     if (s.isInterruptible()) {
                         s.interrupt(this);
                     }
@@ -37,7 +37,7 @@ public class Fight extends BaseScript {
         
         if (attachedPlayers.size() < 2) {
             for (Player p : attachedPlayers) {
-                for (BaseScript s : p.scripts) {
+                for (BaseScript s : p.variableTickedScripts) {
                     s.release();
                 }
             }
