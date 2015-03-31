@@ -1,12 +1,8 @@
 package com.mygdx.Network.Server.Scripts;
 
-import com.mygdx.Network.Server.MessageHandlers.QueuedMessage;
-import com.mygdx.Network.Server.MessageHandlers.SentMessageHandler;
-import com.mygdx.Network.Shared.Dialogue;
-import com.mygdx.Network.Shared.Network;
+import com.mygdx.Network.Server.Dialogues.BaseDialogue;
 import com.mygdx.Network.Shared.Player;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  *
@@ -16,24 +12,28 @@ public class BaseScript {
 
     long lastUpdated;           // Last time the script ran
     int updateTimer;            // How much the script waits before running again.
-    //You should spawn new instance for every player, unless they're interacting through this script (Fighting, trading, etc.)
+
+    //You should spawn new instance for every player, unless they're interacting through this script (Fighting, trading, etc.) Single user scripts only use first Player of this array
     ArrayList<Player> attachedPlayers; // Player(s) currently running this script. 
     boolean blocksPlayerCommands;
-    boolean interruptible;      // Does player commands interrupt this script (follow etc. should be interruptible)
-    boolean hasDialogue;        // Does this script allow other players to talk to you (Mainly for NPC purposes but who knows)
-    boolean interrupted;
-    BaseScript interruptor;
-    boolean continuable;
+    BaseDialogue dialogue;        // Does this script allow other players to talk to you (Mainly for NPC purposes but who knows)    
 
+    //Interrupt related
+    boolean interruptible;      // Does player commands interrupt this script (follow etc. should be interruptible)
+    boolean continuable;        // Is it possible to continue this script after interruption
+    boolean interrupted;        // Is this script interrupted
+    BaseScript interruptor;     // The script that interrupted this script.
+
+    //Basescript doesn't do anything on it's own. You should manually set these TRUE if you need them in your own script.
     public BaseScript() {
         attachedPlayers = new ArrayList();
         updateTimer = 1000;
         lastUpdated = System.currentTimeMillis();
         blocksPlayerCommands = false;
         interruptible = false;
-        hasDialogue = false;
         interrupted = false;
         continuable = false;
+        dialogue = null;
     }
 
     public boolean isBlocking() {
@@ -41,7 +41,7 @@ public class BaseScript {
     }
 
     public boolean hasDialogue() {
-        return hasDialogue;
+        return dialogue != null;
     }
 
     public BaseScript(Player player) {
@@ -53,45 +53,23 @@ public class BaseScript {
         attachedPlayers.remove(player);
     }
 
+    //
     public void onTalk(Player target) {
-        Network.SendDialogue msg = new Network.SendDialogue();
-        msg.dialogue = new Dialogue();
-        msg.dialogue.message = "DEBUG: BaseScript talking";
-        msg.dialogue.answers = new HashMap();
-        msg.dialogue.answers.put(0, "Cancel..");
-        msg.dialogue.answers.put(1, "Continue..");
-
-        QueuedMessage toSend = new QueuedMessage(target.connection, msg);
-        SentMessageHandler.receivedMessages.add(toSend);
+        if (hasDialogue()) {
+            dialogue.onTalk(target);
+        }
     }
 
     public void onAnswer(Player target, int response) {
-        if (response == 0) {
-            Network.SendDialogue msg = new Network.SendDialogue();
-            msg.dialogue = new Dialogue();
-            msg.dialogue.message = "DEBUG: BaseScript saying BYE ! ";
-            msg.dialogue.answers = new HashMap();
-
-            QueuedMessage toSend = new QueuedMessage(target.connection, msg);
-            SentMessageHandler.receivedMessages.add(toSend);
-        }
-
-        if (response == 1) {
-            Network.SendDialogue msg = new Network.SendDialogue();
-            msg.dialogue = new Dialogue();
-            msg.dialogue.message = "DEBUG: BaseScript answering to continue";
-            msg.dialogue.answers = new HashMap();
-            msg.dialogue.answers.put(0, "Continue..");
-
-            QueuedMessage toSend = new QueuedMessage(target.connection, msg);
-            SentMessageHandler.receivedMessages.add(toSend);
+        if (hasDialogue()) {
+            dialogue.onAnswer(target, response);
         }
     }
 
-    public ArrayList<Player> hasPlayers(){
+    public ArrayList<Player> hasPlayers() {
         return attachedPlayers;
     }
-    
+
     public void onUpdate() {
         lastUpdated = System.currentTimeMillis();
 
@@ -121,27 +99,35 @@ public class BaseScript {
         return !interrupted && interruptible;
     }
 
+    protected void isThisScriptReferencedInInterrupter() {
+        boolean scriptReferenced = false;
+
+        for (Player p : interruptor.attachedPlayers) {
+            if (p.variableTickedScripts.contains(interruptor)) {
+                scriptReferenced = true;
+            }
+        }
+        if (!scriptReferenced) {
+            interruptor = null;
+            interrupted = false;
+        }
+    }
+
+    protected void isInterrupterStillAlive() {
+        if (interruptor != null) {
+            if (interruptor.attachedPlayers.isEmpty()) {
+                interruptor = null;
+            } else {
+                isThisScriptReferencedInInterrupter();
+            }
+        } else {
+            interrupted = false;
+        }
+    }
+
     protected boolean readyToRun() {
         if (interrupted) {
-            if (interruptor != null) {
-                if (interruptor.attachedPlayers.isEmpty()) {
-                    interruptor = null;
-                } else {
-                    boolean scriptReferenced = false;
-                    for (Player p : interruptor.attachedPlayers) {
-                        if (p.variableTickedScripts.contains(interruptor)) {
-                            scriptReferenced = true;
-                        }
-                    }
-                    if (!scriptReferenced) {
-                        interruptor = null;
-                        interrupted = false;
-
-                    }
-                }
-            } else {
-                interrupted = false;
-            }
+            isInterrupterStillAlive();
         }
 
         return lastUpdated < System.currentTimeMillis() - updateTimer && !interrupted;

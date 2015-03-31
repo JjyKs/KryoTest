@@ -11,7 +11,6 @@ public class Test extends BaseScript {
     public Test(Player player) {
         super(player);
         interruptible = false;
-        hasDialogue = false;
         updateTimer = 5000;
     }
 

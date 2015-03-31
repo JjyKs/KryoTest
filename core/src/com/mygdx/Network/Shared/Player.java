@@ -1,8 +1,10 @@
 package com.mygdx.Network.Shared;
 
 import com.mygdx.Network.Server.Misc.CharacterConnection;
+import com.mygdx.Network.Server.Quests.QuestHolder;
 import com.mygdx.Network.Server.Scripts.BaseScript;
 import java.util.ArrayList;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Player {
 
@@ -16,6 +18,7 @@ public class Player {
     public int tickRate;
     public boolean npc;
     public boolean fightable;
+    public ConcurrentHashMap<String, QuestHolder> quests = new ConcurrentHashMap();
     
     //Scripts attached to the player. Variable ones run whenever enough time has passed, and PlayerHandler updates them
     //Fixed ones run according to the servers tickrate

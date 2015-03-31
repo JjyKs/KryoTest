@@ -13,7 +13,6 @@ public class Daniel extends BaseScript {
         super(player);
         updateTimer = 5000;
         interruptible = true;
-        hasDialogue = true;
         continuable = true;
     }
 
