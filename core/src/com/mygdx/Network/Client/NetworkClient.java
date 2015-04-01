@@ -56,7 +56,7 @@ public class NetworkClient {
                 if (object instanceof SendDialogue) {
                     SendDialogue msg = (SendDialogue) object;
                     System.out.println(msg.dialogue.message);
-                    System.out.println(msg.dialogue.answers.values());
+                    System.out.println(msg.dialogue.answers.keySet() + " " + msg.dialogue.answers.values());
                     return;
                 }
 
@@ -113,27 +113,39 @@ public class NetworkClient {
 
     public void sendMessage(String message) {
         System.out.println(message);
-         if (message.contains("FIGHT")) {
+        if (message.contains("FIGHT")) {
             StartFight msg = new StartFight();
-            msg.name = "Daniel";
+            msg.name = "Cook";
             client.sendUDP(msg);
             System.out.println("DialogueFightSent");
         }
         if (message.contains("TALK")) {
             TalkTo msg = new TalkTo();
-            msg.name = "Daniel";
+            msg.name = "Cook";
             client.sendUDP(msg);
             System.out.println("DialogueAskSent");
+        } else if (message.contains("2")) {
+            DialogueAnswer msg = new DialogueAnswer();
+            msg.name = "Cook";
+            msg.id = 2;
+            client.sendUDP(msg);
+            System.out.println("DialogueAnswerSent");
         } else if (message.contains("1")) {
             DialogueAnswer msg = new DialogueAnswer();
-            msg.name = "Daniel";
+            msg.name = "Cook";
             msg.id = 1;
             client.sendUDP(msg);
             System.out.println("DialogueAnswerSent");
         } else if (message.contains("0")) {
             DialogueAnswer msg = new DialogueAnswer();
-            msg.name = "Daniel";
+            msg.name = "Cook";
             msg.id = 0;
+            client.sendUDP(msg);
+            System.out.println("DialogueAnswerSent");
+        } else if (message.contains("-1")) {
+            DialogueAnswer msg = new DialogueAnswer();
+            msg.name = "Cook";
+            msg.id = -1;
             client.sendUDP(msg);
             System.out.println("DialogueAnswerSent");
         } else {
@@ -141,10 +153,18 @@ public class NetworkClient {
             msg.message = message;
             client.sendUDP(msg);
         }
-
     }
 
     public static void main(String[] args) {
         new NetworkClient(new GameState(name));
+    }
+
+    public static boolean isNumeric(String str) {
+        try {
+            double d = Double.parseDouble(str);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
     }
 }

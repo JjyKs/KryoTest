@@ -8,22 +8,30 @@ import com.mygdx.Network.Shared.Player;
  */
 public class QuestHolder {
 
-    int currentProgress;
+    State currentState;
     int maxProgress;
     Player attachedPlayer;
 
-    public QuestHolder(Player attachedPlayer) {
-        currentProgress = 0;
+    public QuestHolder(Player attachedPlayer, State state) {
+        currentState = state;
         maxProgress = 1;
-        
-    }
-    
-    public void proceed(){
-        
     }
 
-    private void carProceed() {
-        
+    public void talkThroughState(Player p) {
+        currentState.talkThrough(p);
     }
 
+    public void answerThroughState(Player p, int id) {
+        currentState.answerThrough(p, id);
+    }
+
+    public void proceed() {
+        if (canProceed()) {
+            currentState = currentState.proceed();
+        }
+    }
+
+    public boolean canProceed() {
+        return currentState.isProceedable();
+    }
 }

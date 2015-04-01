@@ -1,5 +1,7 @@
 package com.mygdx.Network.Server.Quests;
 
+import com.mygdx.Network.Shared.Player;
+
 /**
  *
  * @author Jyri
@@ -7,4 +9,6 @@ package com.mygdx.Network.Server.Quests;
 public interface State {    
     State proceed();
     boolean isProceedable();
+    void talkThrough(Player p);
+    void answerThrough(Player p, int id);
 }

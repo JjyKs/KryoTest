@@ -5,10 +5,40 @@
  */
 package com.mygdx.Network.Server.Quests.CooksAssistant;
 
+import com.mygdx.Network.Server.Dialogues.BaseDialogue;
+import com.mygdx.Network.Server.Quests.CooksAssistant.NPCS.Dialogues.CookDialogueStart;
+import com.mygdx.Network.Server.Quests.State;
+import com.mygdx.Network.Shared.Player;
+
 /**
  *
  * @author Jyri
  */
-public class Start {
+public class Start implements State {
     
+    BaseDialogue dialogue = new CookDialogueStart();
+    
+    @Override
+    public State proceed() {
+        if (isProceedable()) {
+            return new WaitingForIncredients();
+        } else {            
+            return this;
+        }
+    }
+
+    @Override
+    public boolean isProceedable() {
+        return true;
+    }
+
+    @Override
+    public void talkThrough(Player p) {
+        dialogue.onTalk(p);
+    }
+
+    @Override
+    public void answerThrough(Player p, int id) {
+        dialogue.onAnswer(p, id);
+    }
 }

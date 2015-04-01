@@ -1,22 +1,41 @@
-
 package com.mygdx.Network.Server.Quests.CooksAssistant;
 
+import com.mygdx.Network.Server.Dialogues.BaseDialogue;
+import com.mygdx.Network.Server.Quests.CooksAssistant.NPCS.Dialogues.CookDialogueWaitingForIncredients;
 import com.mygdx.Network.Server.Quests.State;
+import com.mygdx.Network.Shared.Player;
 
 /**
  *
  * @author Jyri
  */
-public class WaitingForIncredients implements State{
+public class WaitingForIncredients implements State {
+
+    BaseDialogue dialogue = new CookDialogueWaitingForIncredients();
 
     @Override
     public State proceed() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if (isProceedable()) {
+            return new Ready();
+        } else {
+            return this;
+        }
     }
 
     @Override
     public boolean isProceedable() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        //Checkkaa että pelaajalla on: Milk
+        return true;
     }
-    
+
+    @Override
+    public void talkThrough(Player p) {
+        dialogue.onTalk(p);
+    }
+
+    @Override
+    public void answerThrough(Player p, int id) {
+        dialogue.onAnswer(p, id);
+    }
+
 }

@@ -11,18 +11,18 @@ import java.util.ArrayList;
 public class BaseScript {
 
     long lastUpdated;           // Last time the script ran
-    int updateTimer;            // How much the script waits before running again.
+    public int updateTimer;            // How much the script waits before running again.
 
     //You should spawn new instance for every player, unless they're interacting through this script (Fighting, trading, etc.) Single user scripts only use first Player of this array
-    ArrayList<Player> attachedPlayers; // Player(s) currently running this script. 
-    boolean blocksPlayerCommands;
-    BaseDialogue dialogue;        // Does this script allow other players to talk to you (Mainly for NPC purposes but who knows)    
+    public ArrayList<Player> attachedPlayers; // Player(s) currently running this script. 
+    public boolean blocksPlayerCommands;
+    public BaseDialogue dialogue;        // Does this script allow other players to talk to you (Mainly for NPC purposes but who knows)    
 
     //Interrupt related
-    boolean interruptible;      // Does player commands interrupt this script (follow etc. should be interruptible)
-    boolean continuable;        // Is it possible to continue this script after interruption
-    boolean interrupted;        // Is this script interrupted
-    BaseScript interruptor;     // The script that interrupted this script.
+    public boolean interruptible;      // Does player commands interrupt this script (follow etc. should be interruptible)
+    public boolean continuable;        // Is it possible to continue this script after interruption
+    public boolean interrupted;        // Is this script interrupted
+    public BaseScript interruptor;     // The script that interrupted this script.
 
     //Basescript doesn't do anything on it's own. You should manually set these TRUE if you need them in your own script.
     public BaseScript() {

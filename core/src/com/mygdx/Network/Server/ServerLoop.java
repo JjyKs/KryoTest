@@ -1,6 +1,7 @@
 package com.mygdx.Network.Server;
 
 import com.mygdx.Network.Server.DataStructureHandlers.PlayerHandler;
+import com.mygdx.Network.Server.Quests.CooksAssistant.CooksAssistantInit;
 import com.mygdx.Network.Server.Scripts.Daniel;
 import com.mygdx.Network.Server.Scripts.DeathCheck;
 import com.mygdx.Network.Server.Scripts.Test;
@@ -91,6 +92,7 @@ public class ServerLoop extends Thread {
 
     @Override
     public void run() {
+        CooksAssistantInit.init(loggedIn);
         Player daniel = new Player();
         daniel.health = 5;
         daniel.name = "Daniel";
