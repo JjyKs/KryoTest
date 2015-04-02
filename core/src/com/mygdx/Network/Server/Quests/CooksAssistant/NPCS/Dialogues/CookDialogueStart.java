@@ -4,8 +4,6 @@ import com.mygdx.Network.Server.Dialogues.BaseDialogue;
 import com.mygdx.Network.Server.MessageHandlers.QueuedMessage;
 import com.mygdx.Network.Server.MessageHandlers.SentMessageHandler;
 import com.mygdx.Network.Server.Quests.CooksAssistant.CooksAssistantInit;
-import com.mygdx.Network.Server.Quests.CooksAssistant.Start;
-import com.mygdx.Network.Server.Quests.QuestHolder;
 import com.mygdx.Network.Shared.Dialogue;
 import com.mygdx.Network.Shared.Network;
 import com.mygdx.Network.Shared.Player;
