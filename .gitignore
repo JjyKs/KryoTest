@@ -53,7 +53,7 @@ dist/
 nbdist/
 nbactions.xml
 nb-configuration.xml
-
+.nb-gradle/
 ## Gradle
 
 .gradle
@@ -62,3 +62,9 @@ build/
 
 ## OS Specific
 .DS_Store
+
+.nb-gradle/private/cache/KryoTest-d41d8cd98f00b204e9800998ecf8427e
+
+.nb-gradle/profiles/private/aux-config
+
+.nb-gradle/profiles/private/aux-config
