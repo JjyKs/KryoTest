@@ -4,6 +4,8 @@ import com.mygdx.Network.Server.Misc.CharacterConnection;
 import com.mygdx.Network.Server.Quests.QuestHolder;
 import com.mygdx.Network.Server.Scripts.BaseScript;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Player {
@@ -19,11 +21,12 @@ public class Player {
     public boolean npc;
     public boolean fightable;
     public ConcurrentHashMap<String, QuestHolder> quests = new ConcurrentHashMap();
+    public List customMenuOptions = Collections.synchronizedList(new ArrayList());
     
     //Scripts attached to the player. Variable ones run whenever enough time has passed, and PlayerHandler updates them
     //Fixed ones run according to the servers tickrate
     public ArrayList<BaseScript> variableTickedScripts = new ArrayList();
     public ArrayList<BaseScript> fixedTickedScripts = new ArrayList();
-    
+
     public CharacterConnection connection;
 }

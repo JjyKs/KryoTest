@@ -1,16 +1,17 @@
+
 package com.mygdx.Network.Server.Scripts;
 
 import com.mygdx.Network.Shared.Player;
 
 /**
  *
- * @author Jyri
+ * @author JjyKs
  */
-public class Daniel extends BaseScript {
+public class DairyCow extends BaseScript {
 
-    public Daniel(Player player) {
+    public DairyCow(Player player) {
         super(player);
-        updateTimer = 5000;
+        updateTimer = 1000;
         interruptible = true;
         continuable = true;
     }
