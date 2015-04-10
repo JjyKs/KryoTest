@@ -3,6 +3,7 @@ package com.mygdx.Network.Server.MessageHandlers.Protocol;
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Connection;
 import com.mygdx.Network.Server.DataStructureHandlers.PlayerHandler;
 import com.mygdx.Network.Server.Helpers.PlayerValidator;
+import com.mygdx.Network.Server.MenuOptions.MenuOption;
 import com.mygdx.Network.Server.Misc.CharacterConnection;
 import com.mygdx.Network.Shared.Network;
 import com.mygdx.Network.Shared.Player;
@@ -26,6 +27,13 @@ public class AskForTick {
         pon.yTarget = p.yTarget;
         pon.npc = p.npc;
         pon.fightable = p.fightable;
+        pon.customMenuOptions = new String[p.customMenuOptions.size()];
+        
+        //Add custom menu options to this PON
+        int index = 0;
+        for (MenuOption m : p.customMenuOptions){
+            pon.customMenuOptions[index] = m.getName();
+        }
 
         return pon;
 

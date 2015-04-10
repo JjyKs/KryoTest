@@ -22,6 +22,7 @@ public class CookScript extends BaseScript {
         if (readyToRun()) {
             super.onUpdate();
             attachedPlayers.get(0).message = "OLEN KOKKI";
+            attachedPlayers.get(0).lastMessage = System.currentTimeMillis();
         }
     }
 

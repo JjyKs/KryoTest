@@ -1,6 +1,8 @@
-
 package com.mygdx.Network.Server.Scripts;
 
+import com.mygdx.Network.Server.MenuOptions.Milk;
+import com.mygdx.Network.Server.Misc.Area;
+import com.mygdx.Network.Server.Misc.Vector2i;
 import com.mygdx.Network.Shared.Player;
 
 /**
@@ -9,20 +11,26 @@ import com.mygdx.Network.Shared.Player;
  */
 public class DairyCow extends BaseScript {
 
-    public DairyCow(Player player) {
+    Area area;
+
+    public DairyCow(Player player, Area area) {
         super(player);
-        updateTimer = 1000;
+        updateTimer = 10000;
         interruptible = true;
         continuable = true;
+        this.area = area;
+        this.attachedPlayers.get(0).customMenuOptions.add(new Milk());
     }
 
     @Override
     public void onUpdate() {
         if (readyToRun()) {
             super.onUpdate();
-            attachedPlayers.get(0).xTarget += 32;
-            attachedPlayers.get(0).yTarget += 32;
+            Vector2i newPos = area.getNewPosition();
+            attachedPlayers.get(0).xTarget = newPos.x;
+            attachedPlayers.get(0).yTarget += newPos.y;
+            attachedPlayers.get(0).message = "MOO";
+            attachedPlayers.get(0).lastMessage = System.currentTimeMillis();
         }
     }
-
 }

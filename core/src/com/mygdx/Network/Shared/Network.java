@@ -88,4 +88,10 @@ public class Network {
         public String name;
     }
 
+    static public class UseCustomOption {
+
+        public String name;
+        public int id;
+    }
+
 }

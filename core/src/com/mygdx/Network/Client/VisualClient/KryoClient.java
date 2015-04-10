@@ -3,20 +3,15 @@ package com.mygdx.Network.Client.VisualClient;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.mygdx.Network.Client.GameLogic;
 import static com.mygdx.Network.Client.GameLogic.randInt;
 import com.mygdx.Network.Client.GameState;
-import com.mygdx.Network.Client.NetworkClient;
 import com.mygdx.Network.Client.PathFinder;
 import com.mygdx.Network.Shared.Player;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.concurrent.ConcurrentHashMap;
 
 //PLACEHOLDER CLIENT FOR TESTING.

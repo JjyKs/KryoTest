@@ -50,6 +50,7 @@ public class NetworkClient {
                 if (object instanceof PlayerList) {
                     PlayerList msg = (PlayerList) object;
                     state.setPlayerList(new HashSet(msg.playerList));
+                    
                     return;
                 }
 

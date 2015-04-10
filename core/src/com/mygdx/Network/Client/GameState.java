@@ -34,8 +34,10 @@ public class GameState {
             newPlayer.yTarget = p.yTarget;
             newPlayer.xTarget = p.xTarget;
             newPlayer.message = p.message;
-
+            
             newPlayer.timeToLive = 2;
+            
+            System.out.println(newPlayer.customMenuOptions);
             playerList.put(newPlayer.name, newPlayer);
         }
     }

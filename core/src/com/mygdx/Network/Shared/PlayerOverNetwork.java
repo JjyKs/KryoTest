@@ -7,4 +7,5 @@ public class PlayerOverNetwork {
     public int tickRate;
     public boolean npc;
     public boolean fightable;
+    public String[] customMenuOptions;
 }

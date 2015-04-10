@@ -60,8 +60,10 @@ public class MessageOperator {
             ContinueDialogue.process(c, this, object);
         } else if (object instanceof Network.AskForTick) {      //AskForTick
             AskForTick.process(c, this, object);
-        } else if (object instanceof Network.StartFight) {      
+        } else if (object instanceof Network.StartFight) {      //StartFight    
             StartFight.process(c, this, object);
+        } else if (object instanceof Network.UseCustomOption) { //UseCustomOption  
+            UseCustomMenuOption.process(c, this, object);
         }
     }
 }
