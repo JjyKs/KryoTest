@@ -20,6 +20,7 @@ public class DairyCow extends BaseScript {
         continuable = true;
         this.area = area;
         this.attachedPlayers.get(0).customMenuOptions.add(new Milk());
+        System.out.println(this.attachedPlayers.get(0).customMenuOptions.size());
     }
 
     @Override

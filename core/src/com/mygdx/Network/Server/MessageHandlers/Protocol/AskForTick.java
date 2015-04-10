@@ -32,6 +32,7 @@ public class AskForTick {
         //Add custom menu options to this PON
         int index = 0;
         for (MenuOption m : p.customMenuOptions){
+            System.out.println(m.getName());
             pon.customMenuOptions[index] = m.getName();
         }
 
@@ -80,7 +81,7 @@ public class AskForTick {
                 pointerToPlayer = msg.playerList.get(msg.playerList.size() - 1);
             }
         }
-        
+       
         setTick(character, msg.playerList.size(), c, pointerToPlayer);
         operator.server.sendToUDP(connection.getID(), msg);
     }

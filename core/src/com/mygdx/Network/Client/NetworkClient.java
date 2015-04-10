@@ -17,6 +17,7 @@ import com.mygdx.Network.Shared.Network.SendDialogue;
 import com.mygdx.Network.Shared.Network.StartFight;
 import com.mygdx.Network.Shared.Network.TalkTo;
 import com.mygdx.Network.Shared.Network.UpdateCharacter;
+import com.mygdx.Network.Shared.PlayerOverNetwork;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Random;
@@ -50,6 +51,11 @@ public class NetworkClient {
                 if (object instanceof PlayerList) {
                     PlayerList msg = (PlayerList) object;
                     state.setPlayerList(new HashSet(msg.playerList));
+                    for (PlayerOverNetwork p : msg.playerList){
+                        for (String s : p.customMenuOptions){
+                            System.out.println(s);
+                        }
+                    }
                     
                     return;
                 }

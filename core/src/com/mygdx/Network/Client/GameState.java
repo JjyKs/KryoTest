@@ -37,7 +37,7 @@ public class GameState {
             
             newPlayer.timeToLive = 2;
             
-            System.out.println(newPlayer.customMenuOptions);
+            System.out.println(p.customMenuOptions);
             playerList.put(newPlayer.name, newPlayer);
         }
     }

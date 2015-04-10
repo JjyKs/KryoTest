@@ -24,13 +24,13 @@ public class CooksAssistantInit {
 
         Player dairyCow = new Player();
         dairyCow.health = 99;
-        dairyCow.name = "Cook";
+        dairyCow.name = "DairyCow";
         dairyCow.npc = true;
         dairyCow.variableTickedScripts.add(new DairyCow(dairyCow, new Area(32, 32, 96, 96)));
 
         PlayerHandler.addPlayer(cook);
         loggedIn.put(cook.name, cook);
         PlayerHandler.addPlayer(dairyCow);
-        loggedIn.put(cook.name, dairyCow);
+        loggedIn.put(dairyCow.name, dairyCow);
     }
 }
