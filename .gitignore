@@ -69,3 +69,5 @@ build/
 
 .nb-gradle/profiles/private/aux-config
 .nb-gradle/private/cache/core-fb83b73eb3c879b18d343675f32aca61
+
+.nb-gradle/private/cache/KryoTest-d41d8cd98f00b204e9800998ecf8427e
