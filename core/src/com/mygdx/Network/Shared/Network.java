@@ -30,6 +30,8 @@ public class Network {
         kryo.register(TalkTo.class);
         kryo.register(StartFight.class);
         kryo.register(java.util.HashMap.class);
+        kryo.register(UseCustomOption.class);
+        kryo.register(String[].class);
     }
 
     static public class Login {
