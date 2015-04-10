@@ -3,6 +3,8 @@ package com.mygdx.Network.Server.Quests.CooksAssistant;
 import com.mygdx.Network.Server.Dialogues.BaseDialogue;
 import com.mygdx.Network.Server.Quests.CooksAssistant.NPCS.Dialogues.CookDialogueReady;
 import com.mygdx.Network.Server.Quests.State;
+import com.mygdx.Network.Shared.Items.Bucket;
+import com.mygdx.Network.Shared.Items.BucketWithMilk;
 import com.mygdx.Network.Shared.Player;
 
 /**
@@ -15,8 +17,8 @@ public class Ready implements State {
     boolean rewardsNotGiven = true;
 
     @Override
-    public State proceed() {
-        if (isProceedable()) {
+    public State proceed(Player p) {
+        if (isProceedable(p)) {
             System.out.println("Pelaajalle annettiin kakun pala ! :)");
             rewardsNotGiven = false;
         } else {
@@ -26,14 +28,14 @@ public class Ready implements State {
     }
 
     @Override
-    public boolean isProceedable() {
+    public boolean isProceedable(Player p) {
         return rewardsNotGiven;
     }
 
     @Override
     public void talkThrough(Player p) {
-        if (isProceedable()) {
-            proceed();
+        if (isProceedable(p)) {
+            proceed(p);
             answerThrough(p, 1);
         } else {
             dialogue.onTalk(p);
@@ -42,8 +44,10 @@ public class Ready implements State {
 
     @Override
     public void answerThrough(Player p, int id) {
-        if (isProceedable()) {
-            proceed();
+        if (isProceedable(p)) {
+            p.inventory.swapItem(new BucketWithMilk(), null);
+            p.inventory.giveItem(new Bucket());
+            proceed(p);
             answerThrough(p, 1);
         } else {
             dialogue.onAnswer(p, id);

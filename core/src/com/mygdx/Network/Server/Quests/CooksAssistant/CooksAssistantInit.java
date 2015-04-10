@@ -24,7 +24,7 @@ public class CooksAssistantInit {
 
         Player dairyCow = new Player();
         dairyCow.health = 99;
-        dairyCow.name = "DairyCow";
+        dairyCow.name = "Dairy Cow";
         dairyCow.npc = true;
         dairyCow.variableTickedScripts.add(new DairyCow(dairyCow, new Area(32, 32, 96, 96)));
 

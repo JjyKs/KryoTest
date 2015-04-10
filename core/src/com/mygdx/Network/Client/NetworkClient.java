@@ -1,10 +1,11 @@
 package com.mygdx.Network.Client;
 
+import com.esotericsoftware.minlog.Log;
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Client;
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Connection;
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Listener;
 import com.mygdx.Network.KryoNetBase.esotericsoftware.kryonet.Listener.ThreadedListener;
-import com.esotericsoftware.minlog.Log;
+import com.mygdx.Network.Server.MessageHandlers.Protocol.UseCustomMenuOption;
 import com.mygdx.Network.Shared.Network;
 import com.mygdx.Network.Shared.Network.AskForTick;
 import com.mygdx.Network.Shared.Network.DialogueAnswer;
@@ -17,6 +18,7 @@ import com.mygdx.Network.Shared.Network.SendDialogue;
 import com.mygdx.Network.Shared.Network.StartFight;
 import com.mygdx.Network.Shared.Network.TalkTo;
 import com.mygdx.Network.Shared.Network.UpdateCharacter;
+import com.mygdx.Network.Shared.Network.UseCustomOption;
 import com.mygdx.Network.Shared.PlayerOverNetwork;
 import java.io.IOException;
 import java.util.HashSet;
@@ -50,13 +52,7 @@ public class NetworkClient {
 
                 if (object instanceof PlayerList) {
                     PlayerList msg = (PlayerList) object;
-                    state.setPlayerList(new HashSet(msg.playerList));
-                    for (PlayerOverNetwork p : msg.playerList){
-                        for (String s : p.customMenuOptions){
-                            System.out.println(s);
-                        }
-                    }
-                    
+                    state.setPlayerList(new HashSet(msg.playerList));                                     
                     return;
                 }
 
@@ -155,6 +151,12 @@ public class NetworkClient {
             msg.id = -1;
             client.sendUDP(msg);
             System.out.println("DialogueAnswerSent");
+        } else if (message.contains("MILK")) {
+            UseCustomOption msg = new UseCustomOption();
+            msg.name = "Dairy Cow";
+            msg.id = 0;
+            client.sendUDP(msg);
+            System.out.println("UseCustomOptionSent");
         } else {
             UpdateCharacter msg = new UpdateCharacter();
             msg.message = message;

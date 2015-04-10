@@ -15,7 +15,10 @@ public class Milk implements MenuOption{
     @Override
     public void onAction(Player user) {
         if (user.inventory.containsItem(bucket)){
+            System.out.println("Item given");
             user.inventory.swapItem(bucket, new BucketWithMilk());
+        } else {
+            System.out.println("Item not given");
         }
     }
 

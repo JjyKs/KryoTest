@@ -23,7 +23,7 @@ public class CookDialogueReady extends BaseDialogue {
         msg.dialogue.message = "Thanks for your help again :)";
         msg.dialogue.answers = new HashMap();
 
-        if (!target.quests.get(CooksAssistantInit.Name).canProceed()) {
+        if (!target.quests.get(CooksAssistantInit.Name).canProceed(target)) {
             msg.dialogue.answers.put(-1, "Np bro");
         }
 
@@ -40,7 +40,7 @@ public class CookDialogueReady extends BaseDialogue {
 
         //Rewarding
         if (answerID == 1) {
-            target.quests.get(CooksAssistantInit.Name).proceed();
+            target.quests.get(CooksAssistantInit.Name).proceed(target);
             Network.SendDialogue msg = new Network.SendDialogue();
             msg.dialogue = new Dialogue();
             msg.dialogue.message = "DEBUG: Here's your reward.";

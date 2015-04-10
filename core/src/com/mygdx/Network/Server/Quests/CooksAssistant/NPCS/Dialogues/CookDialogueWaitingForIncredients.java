@@ -23,7 +23,7 @@ public class CookDialogueWaitingForIncredients extends BaseDialogue {
         msg.dialogue.message = "Do you have the milk?";
         msg.dialogue.answers = new HashMap();
 
-        if (!target.quests.get(CooksAssistantInit.Name).canProceed()) {
+        if (!target.quests.get(CooksAssistantInit.Name).canProceed(target)) {
             msg.dialogue.answers.put(1, "No");
         } else {
             msg.dialogue.answers.put(2, "Yes");
@@ -40,6 +40,20 @@ public class CookDialogueWaitingForIncredients extends BaseDialogue {
             onTalk(target);
         }
 
+         //Yes
+        if (answerID == 2) {
+            target.quests.get(CooksAssistantInit.Name).proceed(target);
+                    
+            Network.SendDialogue msg = new Network.SendDialogue();
+            msg.dialogue = new Dialogue();
+            msg.dialogue.message = "DEBUG: Ok, let me make this cake.";
+            msg.dialogue.answers = new HashMap();
+            msg.dialogue.answers.put(0, "Continue..");
+
+            QueuedMessage toSend = new QueuedMessage(target.connection, msg);
+            SentMessageHandler.receivedMessages.add(toSend);
+        }
+        
         //No
         if (answerID == 1) {
             Network.SendDialogue msg = new Network.SendDialogue();
@@ -51,18 +65,6 @@ public class CookDialogueWaitingForIncredients extends BaseDialogue {
             QueuedMessage toSend = new QueuedMessage(target.connection, msg);
             SentMessageHandler.receivedMessages.add(toSend);
         }
-        //Yes
-        if (answerID == 2) {
-            target.quests.get(CooksAssistantInit.Name).proceed();
-
-            Network.SendDialogue msg = new Network.SendDialogue();
-            msg.dialogue = new Dialogue();
-            msg.dialogue.message = "DEBUG: Ok, let me make this cake.";
-            msg.dialogue.answers = new HashMap();
-            msg.dialogue.answers.put(0, "Continue..");
-
-            QueuedMessage toSend = new QueuedMessage(target.connection, msg);
-            SentMessageHandler.receivedMessages.add(toSend);
-        }
+       
     }
 }

@@ -1,5 +1,6 @@
 package com.mygdx.Network.Server.Quests;
 
+import com.mygdx.Network.Shared.Items.Item;
 import com.mygdx.Network.Shared.Player;
 
 /**
@@ -25,13 +26,15 @@ public class QuestHolder {
         currentState.answerThrough(p, id);
     }
 
-    public void proceed() {
-        if (canProceed()) {
-            currentState = currentState.proceed();
+    public void proceed(Player p) {
+        if (canProceed(p)) {
+            currentState = currentState.proceed(p);
         }
     }
+    
+    
 
-    public boolean canProceed() {
-        return currentState.isProceedable();
+    public boolean canProceed(Player p) {
+        return currentState.isProceedable(p);
     }
 }

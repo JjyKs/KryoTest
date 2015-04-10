@@ -17,7 +17,10 @@ public class UseCustomMenuOption {
     }
 
     public static boolean targetHasCustomOptionWithThisId(Player target, int id) {
-        return (target.customMenuOptions.size() <= id);
+        System.out.println("Target name: " + target.name);
+        System.out.println(target.customMenuOptions.size());
+        System.out.println(id);
+        return (target.customMenuOptions.size() >= id);
     }
 
     public static boolean targetIsValid(Player source, Player target, int id) {
@@ -38,7 +41,12 @@ public class UseCustomMenuOption {
         int id = msg.id;
 
         if (targetIsValid(character, target, id)) {
+            System.out.println("Target is valid");
+            System.out.println(target.name);
+            System.out.println(target.customMenuOptions.get(id).getName());
             target.customMenuOptions.get(id).onAction(character);
+        } else {
+            System.out.println("Target is INvalid!");
         }
 
     }

@@ -5,6 +5,7 @@ import com.mygdx.Network.Server.MessageHandlers.QueuedMessage;
 import com.mygdx.Network.Server.MessageHandlers.SentMessageHandler;
 import com.mygdx.Network.Server.Quests.CooksAssistant.CooksAssistantInit;
 import com.mygdx.Network.Shared.Dialogue;
+import com.mygdx.Network.Shared.Items.Bucket;
 import com.mygdx.Network.Shared.Network;
 import com.mygdx.Network.Shared.Player;
 import java.util.HashMap;
@@ -38,8 +39,8 @@ public class CookDialogueStart extends BaseDialogue {
         }
 
         if (answerID == 1) {
-            target.quests.get(CooksAssistantInit.Name).proceed();
-
+            target.quests.get(CooksAssistantInit.Name).proceed(target);
+            target.inventory.giveItem(new Bucket());
             Network.SendDialogue msg = new Network.SendDialogue();
             msg.dialogue = new Dialogue();
             msg.dialogue.message = "DEBUG: Proceeded.";

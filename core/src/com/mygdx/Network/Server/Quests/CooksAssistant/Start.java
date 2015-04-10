@@ -19,8 +19,8 @@ public class Start implements State {
     BaseDialogue dialogue = new CookDialogueStart();
     
     @Override
-    public State proceed() {
-        if (isProceedable()) {
+    public State proceed(Player p) {
+        if (isProceedable(p)) {
             return new WaitingForIncredients();
         } else {            
             return this;
@@ -28,7 +28,7 @@ public class Start implements State {
     }
 
     @Override
-    public boolean isProceedable() {
+    public boolean isProceedable(Player p) {
         return true;
     }
 

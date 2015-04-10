@@ -32,9 +32,10 @@ public class AskForTick {
         //Add custom menu options to this PON
         int index = 0;
         for (MenuOption m : p.customMenuOptions){
-            System.out.println(m.getName());
             pon.customMenuOptions[index] = m.getName();
         }
+        
+        p.inventory.print();
 
         return pon;
 
