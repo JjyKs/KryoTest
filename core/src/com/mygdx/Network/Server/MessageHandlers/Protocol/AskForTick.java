@@ -35,8 +35,6 @@ public class AskForTick {
             pon.customMenuOptions[index] = m.getName();
         }
         
-        p.inventory.print();
-
         return pon;
 
     }
