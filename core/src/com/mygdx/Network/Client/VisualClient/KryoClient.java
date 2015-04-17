@@ -34,6 +34,7 @@ import static com.mygdx.Network.Client.GameLogic.randInt;
 import com.mygdx.Network.Client.GameState;
 import com.mygdx.Network.Client.PathFinder;
 import com.mygdx.Network.Shared.Player;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
 //PLACEHOLDER CLIENT FOR TESTING.
@@ -44,7 +45,7 @@ public class KryoClient extends ApplicationAdapter {
     public KryoClient() {
 
     }
-
+    Model model;
     SpriteBatch batch;
     Texture img;
     Texture img2;
@@ -58,13 +59,14 @@ public class KryoClient extends ApplicationAdapter {
     public PerspectiveCamera cam;
     public CameraInputController camController;
     public ModelBatch modelBatch;
-    public ModelInstance instance;
+    public ArrayList<ModelInstance> instances;
     public Decal sprite;
     public DecalBatch decalBatch;
     Texture image;
 
     @Override
     public void create() {
+        instances = new ArrayList();
         batch = new SpriteBatch();
         img = new Texture("badlogic.jpg");
         img2 = new Texture("background.jpg");
@@ -95,32 +97,15 @@ public class KryoClient extends ApplicationAdapter {
         cam.far = 500f;
         cam.update();
 
-        final Model model = modelBuilder.createRect(
-                6f,
-                0f,
-                -6f,
-                -6f,
-                0f,
-                -6f,
-                -6f,
-                0f,
-                6f,
-                6f,
-                0f,
-                6f,
-                0,
-                1,
-                0,
+        model = modelBuilder.createBox(
+                32, 32, 32,
                 new Material(ColorAttribute.createDiffuse(Color.GREEN), ColorAttribute.createSpecular(Color.WHITE), FloatAttribute.createShininess(16f)), Usage.Position | Usage.Normal);
-
-        instance = new ModelInstance(model);
 
     }
 
     public void update() {
         game.update();
         state = game.getGameState();
-        instance.transform.translate(0.0f, 0.0f, 0f);
     }
 
     boolean mouseDown = false;
@@ -157,8 +142,8 @@ public class KryoClient extends ApplicationAdapter {
             game.sendMessage(inputProcessor.message);
             inputProcessor.message = "";
         }
-        batch.begin();
 
+        batch.begin();
         for (int x = Math.max(state.currentPlayer.x / 32 - 7, 0); x < Math.min(state.currentPlayer.x / 32 + 14, 319); x++) {
             for (int y = Math.max(state.currentPlayer.y / 32 - 7, 0); y < Math.min(state.currentPlayer.y / 32 + 14, 319); y++) {
                 if (worldHandler.getMap()[x][y].walkable) {
@@ -179,14 +164,18 @@ public class KryoClient extends ApplicationAdapter {
         font.draw(batch, "Chat: " + inputProcessor.message, 32, 32);
         batch.end();
 
-        //camController.update();
-        modelBatch.begin(cam);
-        //modelBatch.render(instance, environment);
-        modelBatch.end();
-
         buildDecalBatch(decalBatch, pelaajat);
 
         decalBatch.flush();
+
+        //camController.update();
+        modelBatch.begin(cam);
+
+        for (ModelInstance instance : instances) {
+            modelBatch.render(instance, environment);
+        }
+
+        modelBatch.end();
 
     }
 
@@ -195,15 +184,13 @@ public class KryoClient extends ApplicationAdapter {
     int a = 1;
     int b = 1;
 
-    final float CAM_PATH_RADIUS = 180f;
+    float CAM_PATH_RADIUS = 250f;
     static float CAM_HEIGHT = 0;
     float camPathAngle = 10;
 
-    void updateTreeCamera(Vector3 treeCenterPosition, float CAM_PATH_RADIUS) {
+    void updateTreeCamera(Vector3 treeCenterPosition) {
         Vector3 camPosition = cam.position;
-        if (CAM_HEIGHT >= 160) {
-            CAM_HEIGHT = 160;
-        }
+
         camPosition.set(CAM_PATH_RADIUS, CAM_HEIGHT, 0); //Move camera to default location on circle centered at origin
         camPosition.rotate(Vector3.Y, camPathAngle); //Rotate the position to the angle you want. Rotating this vector about the Y axis is like walking along the circle in a counter-clockwise direction.
         camPosition.add(treeCenterPosition); //translate the circle from origin to tree center
@@ -212,43 +199,124 @@ public class KryoClient extends ApplicationAdapter {
         cam.update(); //Register the changes to the camera position and direction
     }
 
-    int angle = 160;
-    int suunta = 2;
+    int angle = 89;
+    int suunta = 1;
 
     public void buildDecalBatch(DecalBatch batch, ConcurrentHashMap<String, Player> pelaajat) {
-        updateTreeCamera(new Vector3(state.currentPlayer.x, 16, -state.currentPlayer.y), Math.max(CAM_PATH_RADIUS - CAM_HEIGHT, 3));
+        updateTreeCamera(new Vector3(state.currentPlayer.x, state.currentPlayer.camHeight, -state.currentPlayer.y));
 
-        camPathAngle++;
+        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
+            camPathAngle += 0.5f;
+        }
         if (camPathAngle >= 360) {
             camPathAngle = 0;
         }
 
-        angle += suunta;
+        if (Gdx.input.isKeyPressed(Input.Keys.E)) {
+            angle += suunta;
+        }
 
-        if (angle > 160 || angle <= 60) {
+        if (angle >= 90 || angle <= 30) {
             suunta = -suunta;
         }
-        CAM_HEIGHT = angle;
 
-        for (int x = Math.max(state.currentPlayer.x / 32 - 7, 0); x < Math.min(state.currentPlayer.x / 32 + 14, 319); x++) {
-            for (int y = Math.max(state.currentPlayer.y / 32 - 7, 0); y < Math.min(state.currentPlayer.y / 32 + 14, 319); y++) {
+        CAM_HEIGHT = (float) Math.sin(Math.toRadians(angle)) * (300);
+        CAM_PATH_RADIUS = (float) Math.cos(Math.toRadians(angle)) * 300;
+
+        instances.clear();
+
+        for (int x = Math.max(state.currentPlayer.x / 32 - 16, 0); x < Math.min(state.currentPlayer.x / 32 + 14, 319); x++) {
+            for (int y = Math.max(state.currentPlayer.y / 32 - 16, 0); y < Math.min(state.currentPlayer.y / 32 + 14, 319); y++) {
                 if (worldHandler.getMap()[x][y].walkable) {
-                    Decal sprite;
-                    sprite = Decal.newDecal(32, 32, new TextureRegion(image), true);
-                    sprite.setPosition(x * 32, 0, -y * 32);
-                    sprite.setRotation(0, 90, 0);
-                    decalBatch.add(sprite);
+                    ModelInstance rofl = worldHandler.getMap()[x][y].getOrCreateModel(modelBuilder, worldHandler, instances);
+                    instances.add(rofl);
                 }
             }
         }
 
         for (Player p : pelaajat.values()) {
-            Decal sprite;
-            sprite = Decal.newDecal(32, 32, new TextureRegion(img), true);
-            sprite.setPosition(p.x, 16, -p.y);
-            sprite.lookAt(cam.position, Vector3.Y);
-            decalBatch.add(sprite);
+            ModelInstance rofl = new ModelInstance(model);
 
+            float height1 = worldHandler.getMap()[p.x / 32][p.y / 32].z;
+            float height2 = worldHandler.getMap()[p.x / 32 + 1][p.y / 32].z;
+
+            float test = (float) p.x / 32;
+            test -= (int) test;
+
+            height1 = height1 * (1 - test);
+            height2 = height2 * test;
+
+            float height3 = worldHandler.getMap()[p.x / 32][p.y / 32 + 1].z;
+            float height4 = worldHandler.getMap()[p.x / 32 + 1][p.y / 32 + 1].z;
+
+            float test2 = (float) p.x / 32;
+            test2 -= (int) test2;
+
+            height3 = height3 * (1 - test2);
+            height4 = height4 * test2;
+
+            float height5 = height1 + height2;
+            float height6 = height3 + height4;
+
+            float test3 = (float) p.y / 32;
+            test3 -= (int) test3;
+
+            height5 = height5 * (1 - test3);
+            height6 = height6 * test3;
+
+            if (p.name.equals(state.currentPlayer.name)) {
+                state.currentPlayer.camHeight = height5 + height6;
+            }
+            System.out.println("");
+
+            
+            boolean changed = false;
+            System.out.println(p.targetRotation);
+            if (p.targetRotation == 0 && p.rotation != 180 && !changed) {
+                if (p.rotation < 180) {
+                    p.rotation += 6;
+                } else {
+                    p.rotation -= 6;
+                }
+                changed = true;
+            }
+
+            if (p.targetRotation == 1 && p.rotation != 0 && !changed) {
+                if (p.rotation > 180) {
+                    p.rotation += 6;
+                } else {
+                    p.rotation -= 6;
+                }
+                changed = true;
+            }
+
+            if (p.targetRotation == 2 && p.rotation != 270 && !changed) {
+                if (p.rotation > 90 && p.rotation < 270) {
+                    p.rotation += 6;
+                } else {
+                    p.rotation -= 6;
+                }
+                changed = true;
+            }
+            if (p.targetRotation == 3 && p.rotation != 90 && !changed) {
+                if (p.rotation > 270 || p.rotation < 90) {
+                    p.rotation += 6;
+                } else {
+                    p.rotation -= 6;
+                }
+                changed = true;
+            }
+
+            if (p.rotation < 0) {
+                p.rotation = 360 + p.rotation;
+            }
+            if (p.rotation >= 360) {
+                p.rotation = p.rotation - 360;
+            }
+
+            rofl.transform.rotate(Vector3.Y, p.rotation);
+            rofl.transform.setTranslation(p.x, height5 + height6, -p.y);
+            instances.add(rofl);
         }
 
     }
