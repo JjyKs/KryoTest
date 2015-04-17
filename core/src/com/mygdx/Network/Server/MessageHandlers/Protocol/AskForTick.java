@@ -28,6 +28,7 @@ public class AskForTick {
         pon.npc = p.npc;
         pon.fightable = p.fightable;
         pon.customMenuOptions = new String[p.customMenuOptions.size()];
+        pon.targetRotation = p.targetRotation;
         
         //Add custom menu options to this PON
         int index = 0;

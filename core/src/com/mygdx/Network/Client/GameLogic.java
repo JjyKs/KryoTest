@@ -42,9 +42,8 @@ public class GameLogic {
             skipFirstChecks = true;
             newMoveCommandIssued = false;
         }
-
-        if (Math.abs(state.currentPlayer.x - state.currentPlayer.xTarget) < 20 || skipFirstChecks) {
-            if (Math.abs(state.currentPlayer.y - state.currentPlayer.yTarget) < 20 || skipFirstChecks) {
+        if (Math.abs(state.currentPlayer.x - state.currentPlayer.xTarget) < 1 || skipFirstChecks) {
+            if (Math.abs(state.currentPlayer.y - state.currentPlayer.yTarget) < 1 || skipFirstChecks) {
                 if (worldHandler.routeToFollow.size() > 0) {
                     network.movePlayer(worldHandler.routeToFollow.get(0).x, worldHandler.routeToFollow.get(0).y);
                     worldHandler.routeToFollow.remove(0);

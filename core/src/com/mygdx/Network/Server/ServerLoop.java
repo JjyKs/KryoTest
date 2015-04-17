@@ -18,7 +18,7 @@ public class ServerLoop extends Thread {
     Map map;
     private String threadName = "serverLoop";
 
-    public ServerLoop(ConcurrentHashMap<String, Player>  loggedIn, Map map) {
+    public ServerLoop(ConcurrentHashMap<String, Player> loggedIn, Map map) {
         this.loggedIn = loggedIn;
         this.map = map;
     }
@@ -76,17 +76,26 @@ public class ServerLoop extends Thread {
     }
 
     public void movePlayer(Player p, Map map, int amount) {
+        boolean xMoved = false;
         if (p.x < p.xTarget && map.map[(p.x + 33) / 32][(p.y) / 32].walkable) {
             PlayerHandler.movePlayer(p, amount, 0);
+            xMoved = true;
+            p.targetRotation = 0;
         }
         if (p.x >= 32 && p.x > p.xTarget && map.map[(p.x - 33) / 32][(p.y) / 32].walkable) {
             PlayerHandler.movePlayer(p, -amount, 0);
+            xMoved = true;
+            p.targetRotation = 1;
         }
-        if (p.y < p.yTarget && map.map[(p.x) / 32][(p.y + 33) / 32].walkable) {
-            PlayerHandler.movePlayer(p, 0, amount);
-        }
-        if (p.y >= 32 && p.y > p.yTarget && map.map[(p.x) / 32][(p.y - 33) / 32].walkable) {
-            PlayerHandler.movePlayer(p, 0, -amount);
+        if (!xMoved) {
+            if (p.y < p.yTarget && map.map[(p.x) / 32][(p.y + 33) / 32].walkable) {
+                PlayerHandler.movePlayer(p, 0, amount);
+                p.targetRotation = 2;
+            }
+            if (p.y >= 32 && p.y > p.yTarget && map.map[(p.x) / 32][(p.y - 33) / 32].walkable) {
+                PlayerHandler.movePlayer(p, 0, -amount);
+                p.targetRotation = 3;
+            }
         }
     }
 

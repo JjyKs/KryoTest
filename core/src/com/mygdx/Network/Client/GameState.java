@@ -34,6 +34,8 @@ public class GameState {
             newPlayer.yTarget = p.yTarget;
             newPlayer.xTarget = p.xTarget;
             newPlayer.message = p.message;
+            newPlayer.targetRotation = p.targetRotation;
+       
             
             newPlayer.timeToLive = 2;
             
@@ -69,9 +71,14 @@ public class GameState {
                 if (Math.abs(toDraw.y - p.y) > maxWarpDistance) {
                     toDraw.y = p.y;
                 }
+                
+                toDraw.xTarget = p.xTarget;
+                toDraw.yTarget = p.yTarget;
 
                 toDraw.message = p.message;
+                toDraw.targetRotation = p.targetRotation;
             } else {
+                
                 playerListToDraw.put(p.name, p);
             }
         }
