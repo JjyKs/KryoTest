@@ -248,15 +248,21 @@ public class KryoClient extends ApplicationAdapter {
     public void buildDecalBatch(DecalBatch batch, ConcurrentHashMap<String, Player> pelaajat) {
         updateTreeCamera(new Vector3(state.currentPlayer.x, state.currentPlayer.camHeight, -state.currentPlayer.y));
 
-        if (Gdx.input.isKeyPressed(Input.Keys.A)) {
-            camPathAngle += 0.5f;
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
+            camPathAngle -= 1f;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
+            camPathAngle += 1f;
         }
         if (camPathAngle >= 360) {
             camPathAngle = 0;
         }
 
-        if (Gdx.input.isKeyPressed(Input.Keys.E)) {
-            angle += suunta;
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
+            angle += 1;
+        }
+        if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
+            angle -= 1;
         }
 
         if (angle >= 90 || angle <= 30) {
