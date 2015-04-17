@@ -16,6 +16,7 @@ public class Map {
                 map[i][ii] = new Tile();
                 map[i][ii].x = i;
                 map[i][ii].y = ii;
+                map[i][ii].z = i * 10 + ii * 5;
                 if (i >= 0 && ii == 9 && i <= 35) {
                     map[i][ii].walkable = false;
                 }

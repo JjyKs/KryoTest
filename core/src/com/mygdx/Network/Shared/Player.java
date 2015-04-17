@@ -14,7 +14,8 @@ public class Player {
     public int health;
     public String name;
     public String message;
-    public int id, x, y, xTarget, yTarget;
+    public int id, x, y, xTarget, yTarget, rotation;
+    public float camHeight;
     public int timeToLive;
     public long lastTick;
     public long lastMessage;
@@ -24,6 +25,7 @@ public class Player {
     public ConcurrentHashMap<String, QuestHolder> quests = new ConcurrentHashMap();
     public List<MenuOption> customMenuOptions = Collections.synchronizedList(new ArrayList());
     public Inventory inventory = new Inventory();
+    public int targetRotation;
     
     //Scripts attached to the player. Variable ones run whenever enough time has passed, and PlayerHandler updates them
     //Fixed ones run according to the servers tickrate

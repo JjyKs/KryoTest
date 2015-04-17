@@ -50,7 +50,6 @@ public class PathFinder {
         haku(x, y);
     }
 
-    int lol = 0;
 
     public void haku(int targetX, int targetY) {
         int maxAmount = 10000;
