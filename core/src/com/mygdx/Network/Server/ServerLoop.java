@@ -77,26 +77,26 @@ public class ServerLoop extends Thread {
 
     public void movePlayer(Player p, Map map, int amount) {
         boolean xMoved = false;
+        p.targetRotation = 0;
         if (p.x < p.xTarget && map.map[(p.x + 33) / 32][(p.y) / 32].walkable) {
             PlayerHandler.movePlayer(p, amount, 0);
             xMoved = true;
-            p.targetRotation = 0;
+            p.targetRotation = 1;
         }
         if (p.x >= 32 && p.x > p.xTarget && map.map[(p.x - 33) / 32][(p.y) / 32].walkable) {
             PlayerHandler.movePlayer(p, -amount, 0);
             xMoved = true;
-            p.targetRotation = 1;
+            p.targetRotation = 2;
         }
-        if (!xMoved) {
-            if (p.y < p.yTarget && map.map[(p.x) / 32][(p.y + 33) / 32].walkable) {
-                PlayerHandler.movePlayer(p, 0, amount);
-                p.targetRotation = 2;
-            }
-            if (p.y >= 32 && p.y > p.yTarget && map.map[(p.x) / 32][(p.y - 33) / 32].walkable) {
-                PlayerHandler.movePlayer(p, 0, -amount);
-                p.targetRotation = 3;
-            }
+        if (p.y < p.yTarget && map.map[(p.x) / 32][(p.y + 33) / 32].walkable) {
+            PlayerHandler.movePlayer(p, 0, amount);
+            p.targetRotation += 10;
         }
+        if (p.y >= 32 && p.y > p.yTarget && map.map[(p.x) / 32][(p.y - 33) / 32].walkable) {
+            PlayerHandler.movePlayer(p, 0, -amount);
+            p.targetRotation += 20;
+        }
+
     }
 
     @Override

@@ -3,12 +3,18 @@ package com.mygdx.Network.Client.VisualClient;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.Input.Keys;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.PerspectiveCamera;
+import com.badlogic.gdx.graphics.Pixmap;
+import com.badlogic.gdx.graphics.Pixmap.Format;
+import com.badlogic.gdx.graphics.PixmapIO;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.VertexAttributes.Usage;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import static com.badlogic.gdx.graphics.g2d.PixmapPackerIO.ImageFormat.PNG;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g3d.Environment;
@@ -29,11 +35,14 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.badlogic.gdx.utils.ScreenUtils;
 import com.mygdx.Network.Client.GameLogic;
 import static com.mygdx.Network.Client.GameLogic.randInt;
 import com.mygdx.Network.Client.GameState;
 import com.mygdx.Network.Client.PathFinder;
 import com.mygdx.Network.Shared.Player;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -94,12 +103,13 @@ public class KryoClient extends ApplicationAdapter {
 
         cam.lookAt(0, 0, 0);
         cam.near = 1f;
-        cam.far = 500f;
+        cam.far = 5000f;
         cam.update();
 
         model = modelBuilder.createBox(
-                32, 32, 32,
+                16, 32, 16,
                 new Material(ColorAttribute.createDiffuse(Color.GREEN), ColorAttribute.createSpecular(Color.WHITE), FloatAttribute.createShininess(16f)), Usage.Position | Usage.Normal);
+        model = modelBuilder.createCone(16, 32, 32, 16, new Material(ColorAttribute.createDiffuse(Color.GREEN), ColorAttribute.createSpecular(Color.WHITE), FloatAttribute.createShininess(16f)), Usage.Position | Usage.Normal);
 
     }
 
@@ -121,20 +131,11 @@ public class KryoClient extends ApplicationAdapter {
     public void render() {
 
         update();
-        Gdx.gl.glClearColor(1, 0, 0, 1);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glViewport(0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT | GL20.GL_DEPTH_BUFFER_BIT);
 
         ConcurrentHashMap<String, Player> pelaajat = new ConcurrentHashMap(state.getPlayerList());
-        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
-            if (!mouseDown) {
-                game.newMoveCommandIssued = true;
-                worldHandler.searchRoute(state.currentPlayer.x / 32, state.currentPlayer.y / 32, (Gdx.input.getX() + state.currentPlayer.x - 224) / 32, (480 - Gdx.input.getY() + state.currentPlayer.y - 224) / 32);
-                mouseDown = true;
-            }
-        } else {
-            mouseDown = false;
-        }
 
         //simulatePlayer();
         if (inputProcessor.sendMessage) {
@@ -142,27 +143,27 @@ public class KryoClient extends ApplicationAdapter {
             game.sendMessage(inputProcessor.message);
             inputProcessor.message = "";
         }
+        /*
+         batch.begin();
+         for (int x = Math.max(state.currentPlayer.x / 32 - 7, 0); x < Math.min(state.currentPlayer.x / 32 + 14, 319); x++) {
+         for (int y = Math.max(state.currentPlayer.y / 32 - 7, 0); y < Math.min(state.currentPlayer.y / 32 + 14, 319); y++) {
+         if (worldHandler.getMap()[x][y].walkable) {
+         batch.draw(img2, 224 + x * 32 - state.currentPlayer.x, 224 + y * 32 - state.currentPlayer.y);
+         }
+         }
+         }
 
-        batch.begin();
-        for (int x = Math.max(state.currentPlayer.x / 32 - 7, 0); x < Math.min(state.currentPlayer.x / 32 + 14, 319); x++) {
-            for (int y = Math.max(state.currentPlayer.y / 32 - 7, 0); y < Math.min(state.currentPlayer.y / 32 + 14, 319); y++) {
-                if (worldHandler.getMap()[x][y].walkable) {
-                    batch.draw(img2, 224 + x * 32 - state.currentPlayer.x, 224 + y * 32 - state.currentPlayer.y);
-                }
-            }
-        }
+         for (Player p : pelaajat.values()) {
+         batch.draw(img, p.x + 224 - state.currentPlayer.x, p.y + 224 - state.currentPlayer.y);
+         font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
+         font.draw(batch, p.name + " ", p.x + 224 - state.currentPlayer.x, p.y + 224 - state.currentPlayer.y);
+         if (p.message != null) {
+         font.draw(batch, p.message, p.x + 224 - state.currentPlayer.x, p.y + 274 - state.currentPlayer.y);
+         }
+         }
 
-        for (Player p : pelaajat.values()) {
-            batch.draw(img, p.x + 224 - state.currentPlayer.x, p.y + 224 - state.currentPlayer.y);
-            font.setColor(1.0f, 1.0f, 1.0f, 1.0f);
-            font.draw(batch, p.name + " ", p.x + 224 - state.currentPlayer.x, p.y + 224 - state.currentPlayer.y);
-            if (p.message != null) {
-                font.draw(batch, p.message, p.x + 224 - state.currentPlayer.x, p.y + 274 - state.currentPlayer.y);
-            }
-        }
-
-        font.draw(batch, "Chat: " + inputProcessor.message, 32, 32);
-        batch.end();
+         font.draw(batch, "Chat: " + inputProcessor.message, 32, 32);
+         batch.end();*/
 
         buildDecalBatch(decalBatch, pelaajat);
 
@@ -176,7 +177,49 @@ public class KryoClient extends ApplicationAdapter {
         }
 
         modelBatch.end();
+        Pixmap pixmap = getScreenshot(Gdx.input.getX(), 480 - Gdx.input.getY(), 1, 1, true);
+        Color color = new Color();
+        Color.rgba8888ToColor(color, pixmap.getPixel(0, 0));
+        System.out.println(state.currentPlayer.y / 32 + (int) (color.g * 32) - 15);
 
+        if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
+            if (!mouseDown) {
+                game.newMoveCommandIssued = true;
+                worldHandler.searchRoute(state.currentPlayer.x / 32, state.currentPlayer.y / 32, state.currentPlayer.x / 32 + (int) (color.r * 32) - 15, state.currentPlayer.y / 32 + (int) (color.g * 32) - 15);
+                mouseDown = true;
+            }
+        } else {
+            mouseDown = false;
+        }
+
+        pixmap.dispose();
+
+    }
+
+    int ran = 0;
+
+    public Pixmap getScreenshot(int x, int y, int w, int h, boolean flipY) {
+        Gdx.gl.glPixelStorei(GL20.GL_PACK_ALIGNMENT, 1);
+        Pixmap pixmap;
+        pixmap = new Pixmap(w, h, Pixmap.Format.RGBA8888);
+        ByteBuffer pixels = pixmap.getPixels();
+        Gdx.gl.glReadPixels(x, y, w, h, GL20.GL_RGBA, GL20.GL_UNSIGNED_BYTE, pixels);
+
+        final int numBytes = w * h * 4;
+        byte[] lines = new byte[numBytes];
+        if (flipY) {
+            final int numBytesPerLine = w * 4;
+            for (int i = 0; i < h; i++) {
+                pixels.position((h - i - 1) * numBytesPerLine);
+                pixels.get(lines, i * numBytesPerLine, numBytesPerLine);
+            }
+            pixels.clear();
+            pixels.put(lines);
+        } else {
+            pixels.clear();
+            pixels.get(lines);
+        }
+        return pixmap;
     }
 
     float asd = 110;
@@ -225,16 +268,18 @@ public class KryoClient extends ApplicationAdapter {
 
         instances.clear();
 
-        for (int x = Math.max(state.currentPlayer.x / 32 - 16, 0); x < Math.min(state.currentPlayer.x / 32 + 14, 319); x++) {
-            for (int y = Math.max(state.currentPlayer.y / 32 - 16, 0); y < Math.min(state.currentPlayer.y / 32 + 14, 319); y++) {
+        for (int x = Math.max(state.currentPlayer.x / 32 - 24, 0); x < Math.min(state.currentPlayer.x / 32 + 24, 319); x++) {
+            for (int y = Math.max(state.currentPlayer.y / 32 - 24, 0); y < Math.min(state.currentPlayer.y / 32 + 24, 319); y++) {
                 if (worldHandler.getMap()[x][y].walkable) {
-                    ModelInstance rofl = worldHandler.getMap()[x][y].getOrCreateModel(modelBuilder, worldHandler, instances);
+                    ModelInstance rofl = worldHandler.getMap()[x][y].getOrCreateModel(modelBuilder, worldHandler, instances, state.currentPlayer);
                     instances.add(rofl);
                 }
             }
         }
 
         for (Player p : pelaajat.values()) {
+            p.x += 16;
+            p.y += 16;
             ModelInstance rofl = new ModelInstance(model);
 
             float height1 = worldHandler.getMap()[p.x / 32][p.y / 32].z;
@@ -269,10 +314,9 @@ public class KryoClient extends ApplicationAdapter {
             }
             System.out.println("");
 
-            
             boolean changed = false;
             System.out.println(p.targetRotation);
-            if (p.targetRotation == 0 && p.rotation != 180 && !changed) {
+            if (p.targetRotation == 1 && p.rotation != 180 && !changed) {
                 if (p.rotation < 180) {
                     p.rotation += 6;
                 } else {
@@ -281,7 +325,7 @@ public class KryoClient extends ApplicationAdapter {
                 changed = true;
             }
 
-            if (p.targetRotation == 1 && p.rotation != 0 && !changed) {
+            if (p.targetRotation == 2 && p.rotation != 0 && !changed) {
                 if (p.rotation > 180) {
                     p.rotation += 6;
                 } else {
@@ -290,7 +334,7 @@ public class KryoClient extends ApplicationAdapter {
                 changed = true;
             }
 
-            if (p.targetRotation == 2 && p.rotation != 270 && !changed) {
+            if (p.targetRotation == 10 && p.rotation != 270 && !changed) {
                 if (p.rotation > 90 && p.rotation < 270) {
                     p.rotation += 6;
                 } else {
@@ -298,8 +342,45 @@ public class KryoClient extends ApplicationAdapter {
                 }
                 changed = true;
             }
-            if (p.targetRotation == 3 && p.rotation != 90 && !changed) {
+
+            if (p.targetRotation == 11 && p.rotation != 225 && !changed) {
+                if (p.rotation > 45 && p.rotation < 225) {
+                    p.rotation += 6;
+                } else {
+                    p.rotation -= 6;
+                }
+                changed = true;
+            }
+
+            if (p.targetRotation == 12 && p.rotation != 315 && !changed) {
+                if (p.rotation > 135 && p.rotation < 315) {
+                    p.rotation += 6;
+                } else {
+                    p.rotation -= 6;
+                }
+                changed = true;
+            }
+            if (p.targetRotation == 20 && p.rotation != 90 && !changed) {
                 if (p.rotation > 270 || p.rotation < 90) {
+                    p.rotation += 6;
+                } else {
+                    p.rotation -= 6;
+                }
+                changed = true;
+            }
+
+            if (p.targetRotation == 21 && p.rotation != 135 && !changed) {
+                if (p.rotation > 315 || p.rotation < 135) {
+                    p.rotation += 6;
+                } else {
+                    p.rotation -= 6;
+                }
+                changed = true;
+            }
+
+            System.out.println(p.targetRotation);
+            if (p.targetRotation == 22 & p.rotation != 45 && !changed) {
+                if (p.rotation > 225 || p.rotation < 45) {
                     p.rotation += 6;
                 } else {
                     p.rotation -= 6;
@@ -315,7 +396,9 @@ public class KryoClient extends ApplicationAdapter {
             }
 
             rofl.transform.rotate(Vector3.Y, p.rotation);
-            rofl.transform.setTranslation(p.x, height5 + height6, -p.y);
+            rofl.transform.rotate(Vector3.X, 180);
+
+            rofl.transform.setTranslation(p.x, height5 + height6 + 16, -p.y);
             instances.add(rofl);
         }
 
