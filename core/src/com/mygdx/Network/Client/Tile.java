@@ -48,7 +48,7 @@ public class Tile {
         Color asd = new Color();
         asd.r += (float) ((x - currentPlayer.x / 32) + 10) / 100;
         asd.g += (float) ((y - currentPlayer.y / 32) + 10) / 100;
-        asd.b += (float) z / 100;
+        asd.b += (float) 0;
 
         Model floor = modelBuilder.createRect(
                 px, worldHandler.getMap()[x][y].z, pz,

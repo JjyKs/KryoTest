@@ -10,31 +10,33 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class GameState {
 
-    ConcurrentHashMap<String, Player> playerList = new ConcurrentHashMap();
-    ConcurrentHashMap<String, Player> playerListToDraw = new ConcurrentHashMap();
+    ConcurrentHashMap<Integer, Player> playerList = new ConcurrentHashMap();
+    ConcurrentHashMap<Integer, Player> playerListToDraw = new ConcurrentHashMap();
 
     public Player currentPlayer = new Player();
 
     public GameState(String name) {
-        currentPlayer.name = name;
+        currentPlayer.nameSWAP = name;
     }
 
     public void setPlayerList(HashSet<PlayerOverNetwork> playerListFromServer) {
         playerList.clear();
         for (PlayerOverNetwork p : playerListFromServer) {
-            if (p.name.equals(currentPlayer.name)) {
+            if (p.nameSwap.equals(currentPlayer.nameSWAP)) {
                 currentPlayer.xTarget = p.xTarget;
                 currentPlayer.yTarget = p.yTarget;
                 currentPlayer.tickRate = p.tickRate;
+                currentPlayer.id = p.id;
             }
             Player newPlayer = new Player();
-            newPlayer.name = p.name;
+            newPlayer.id = p.id;
             newPlayer.x = p.x;
             newPlayer.y = p.y;
             newPlayer.yTarget = p.yTarget;
             newPlayer.xTarget = p.xTarget;
             newPlayer.message = p.message;
             newPlayer.targetRotation = p.targetRotation;
+            
        
             
             newPlayer.timeToLive = 2;
@@ -44,14 +46,14 @@ public class GameState {
             //}
             
             
-            playerList.put(newPlayer.name, newPlayer);
+            playerList.put(newPlayer.id, newPlayer);
         }
     }
 
     public void interpolate() {
         for (Player p : playerList.values()) {
-            if (playerListToDraw.containsKey(p.name)) {
-                Player toDraw = playerListToDraw.get(p.name);
+            if (playerListToDraw.containsKey(p.id)) {
+                Player toDraw = playerListToDraw.get(p.id);
                 if (toDraw.x < p.x) {
                     toDraw.x += Math.max(1, (p.x - toDraw.x) / 128);
                 } else if (toDraw.x > p.x) {
@@ -76,15 +78,17 @@ public class GameState {
                 toDraw.yTarget = p.yTarget;
 
                 toDraw.message = p.message;
+                toDraw.nameSWAP = p.nameSWAP;
                 toDraw.targetRotation = p.targetRotation;
+                toDraw.id = p.id;
             } else {
                 
-                playerListToDraw.put(p.name, p);
+                playerListToDraw.put(p.id, p);
             }
         }
 
-        for (Iterator<Map.Entry<String, Player>> it = playerListToDraw.entrySet().iterator(); it.hasNext();) {
-            Map.Entry<String, Player> entry = it.next();
+        for (Iterator<Map.Entry<Integer, Player>> it = playerListToDraw.entrySet().iterator(); it.hasNext();) {
+            Map.Entry<Integer, Player> entry = it.next();
             if (!playerList.containsKey(entry.getKey())) {
                 entry.getValue().timeToLive--;
                 if (entry.getValue().timeToLive == 0) {
@@ -92,7 +96,7 @@ public class GameState {
                 }
             } else {
                 entry.getValue().timeToLive = 16;
-                if (entry.getKey().equals(currentPlayer.name)) {
+                if (entry.getKey() == (currentPlayer.id)) {
                     currentPlayer.x = entry.getValue().x;
                     currentPlayer.y = entry.getValue().y;
                 }
@@ -100,7 +104,7 @@ public class GameState {
         }
     }
 
-    public ConcurrentHashMap<String, Player> getPlayerList() {
+    public ConcurrentHashMap<Integer, Player> getPlayerList() {
         return playerListToDraw;
     }
 }

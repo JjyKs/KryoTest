@@ -12,12 +12,12 @@ public class ReceivedMessageHandler extends Thread {
     private Thread t;
     private String threadName = "MessageHandler";
     BlockingQueue<QueuedMessage> receivedMessages;
-    ConcurrentHashMap<String, Player> loggedIn;
+    ConcurrentHashMap<Integer, Player> loggedIn;
     Map map;
     Server server;
     MessageOperator operator;
 
-    public ReceivedMessageHandler(BlockingQueue<QueuedMessage> receivedMessages, ConcurrentHashMap<String, Player> loggedIn, Map map, Server server) {
+    public ReceivedMessageHandler(BlockingQueue<QueuedMessage> receivedMessages, ConcurrentHashMap<Integer, Player> loggedIn, Map map, Server server) {
         this.receivedMessages = receivedMessages;
         this.loggedIn = loggedIn;
         this.map = map;

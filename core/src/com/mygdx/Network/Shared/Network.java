@@ -36,7 +36,7 @@ public class Network {
 
     static public class Login {
 
-        public String name;
+        public String id;
     }
 
     static public class RegistrationRequired {

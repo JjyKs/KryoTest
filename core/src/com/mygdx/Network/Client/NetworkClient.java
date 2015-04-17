@@ -85,7 +85,7 @@ public class NetworkClient {
     private void login() {
         Login login = new Login();
         Random random = new Random();
-        login.name = name;
+        login.id = name;
         client.sendTCP(login);
     }
 

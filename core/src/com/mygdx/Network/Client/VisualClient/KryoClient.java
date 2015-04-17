@@ -88,6 +88,7 @@ public class KryoClient extends ApplicationAdapter {
 
         // Load a Texture
         sprite = Decal.newDecal(32, 32, new TextureRegion(image), true);
+
         cam = new PerspectiveCamera(67, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
         cam.position.set(0f, 220f, 100f);
 
@@ -177,15 +178,34 @@ public class KryoClient extends ApplicationAdapter {
         }
 
         modelBatch.end();
-        Pixmap pixmap = getScreenshot(Gdx.input.getX(), 480 - Gdx.input.getY(), 1, 1, true);
+        Pixmap pixmap = getScreenshot(Gdx.input.getX(), Gdx.graphics.getHeight() - Gdx.input.getY(), 1, 1, true);
         Color color = new Color();
         Color.rgba8888ToColor(color, pixmap.getPixel(0, 0));
-        System.out.println(state.currentPlayer.y / 32 + (int) (color.g * 32) - 15);
 
         if (Gdx.input.isButtonPressed(Input.Buttons.LEFT)) {
             if (!mouseDown) {
                 game.newMoveCommandIssued = true;
-                worldHandler.searchRoute(state.currentPlayer.x / 32, state.currentPlayer.y / 32, state.currentPlayer.x / 32 + (int) (color.r * 32) - 15, state.currentPlayer.y / 32 + (int) (color.g * 32) - 15);
+                //Maastoa klikattu
+                System.out.println((int) (color.b * 100));
+                if ((int) (color.b * 100) == 0) {
+                    worldHandler.searchRoute(state.currentPlayer.x / 32, state.currentPlayer.y / 32, state.currentPlayer.x / 32 + (int) (color.r * 32) - 15, state.currentPlayer.y / 32 + (int) (color.g * 32) - 15);
+                } else {
+                    for (Player p : pelaajat.values()) {
+                        if (p.id == (int) (color.b * 100)) {
+                            System.out.println("Click");
+                            System.out.println((int) (color.b * 100));
+                            System.out.println(p.id);
+                            System.out.println(p.nameSWAP);
+                            System.out.println("");
+                        } else {
+                            System.out.println("MISS");
+                            System.out.println(p.id);
+                            System.out.println(p.nameSWAP);
+                            System.out.println((int) (color.b * 100));
+                            System.out.println("");
+                        }
+                    }
+                }
                 mouseDown = true;
             }
         } else {
@@ -265,8 +285,11 @@ public class KryoClient extends ApplicationAdapter {
             angle -= 1;
         }
 
-        if (angle >= 90 || angle <= 30) {
-            suunta = -suunta;
+        if (angle >= 89) {
+            angle = 89;
+        }
+        if (angle <= 20) {
+            angle = 20;
         }
 
         CAM_HEIGHT = (float) Math.sin(Math.toRadians(angle)) * (300);
@@ -287,6 +310,14 @@ public class KryoClient extends ApplicationAdapter {
             p.x += 16;
             p.y += 16;
             ModelInstance rofl = new ModelInstance(model);
+            Color korvaaColorPoolilla = new Color();
+            korvaaColorPoolilla.r += 0;
+            korvaaColorPoolilla.g += 0;
+            korvaaColorPoolilla.b += ((float) p.id) / 100;
+            
+
+            Material Material = model.materials.get(0);
+            Material.set(new Material(ColorAttribute.createDiffuse(korvaaColorPoolilla), ColorAttribute.createSpecular(korvaaColorPoolilla), FloatAttribute.createShininess(0)));
 
             float height1 = worldHandler.getMap()[p.x / 32][p.y / 32].z;
             float height2 = worldHandler.getMap()[p.x / 32 + 1][p.y / 32].z;
@@ -315,81 +346,78 @@ public class KryoClient extends ApplicationAdapter {
             height5 = height5 * (1 - test3);
             height6 = height6 * test3;
 
-            if (p.name.equals(state.currentPlayer.name)) {
+            if (p.id == (state.currentPlayer.id)) {
                 state.currentPlayer.camHeight = height5 + height6;
             }
-            System.out.println("");
 
             boolean changed = false;
-            System.out.println(p.targetRotation);
             if (p.targetRotation == 1 && p.rotation != 180 && !changed) {
                 if (p.rotation < 180) {
-                    p.rotation += 6;
+                    p.rotation += 5;
                 } else {
-                    p.rotation -= 6;
+                    p.rotation -= 5;
                 }
                 changed = true;
             }
 
             if (p.targetRotation == 2 && p.rotation != 0 && !changed) {
                 if (p.rotation > 180) {
-                    p.rotation += 6;
+                    p.rotation += 5;
                 } else {
-                    p.rotation -= 6;
+                    p.rotation -= 5;
                 }
                 changed = true;
             }
 
             if (p.targetRotation == 10 && p.rotation != 270 && !changed) {
                 if (p.rotation > 90 && p.rotation < 270) {
-                    p.rotation += 6;
+                    p.rotation += 5;
                 } else {
-                    p.rotation -= 6;
+                    p.rotation -= 5;
                 }
                 changed = true;
             }
 
             if (p.targetRotation == 11 && p.rotation != 225 && !changed) {
                 if (p.rotation > 45 && p.rotation < 225) {
-                    p.rotation += 6;
+                    p.rotation += 5;
                 } else {
-                    p.rotation -= 6;
+                    p.rotation -= 5;
                 }
                 changed = true;
             }
 
             if (p.targetRotation == 12 && p.rotation != 315 && !changed) {
                 if (p.rotation > 135 && p.rotation < 315) {
-                    p.rotation += 6;
+                    p.rotation += 5;
                 } else {
-                    p.rotation -= 6;
+                    p.rotation -= 5;
                 }
                 changed = true;
             }
             if (p.targetRotation == 20 && p.rotation != 90 && !changed) {
                 if (p.rotation > 270 || p.rotation < 90) {
-                    p.rotation += 6;
+                    p.rotation += 5;
                 } else {
-                    p.rotation -= 6;
+                    p.rotation -= 5;
                 }
                 changed = true;
             }
 
             if (p.targetRotation == 21 && p.rotation != 135 && !changed) {
                 if (p.rotation > 315 || p.rotation < 135) {
-                    p.rotation += 6;
+                    p.rotation += 5;
                 } else {
-                    p.rotation -= 6;
+                    p.rotation -= 5;
                 }
                 changed = true;
             }
 
-            System.out.println(p.targetRotation);
             if (p.targetRotation == 22 & p.rotation != 45 && !changed) {
                 if (p.rotation > 225 || p.rotation < 45) {
-                    p.rotation += 6;
+                    p.rotation += 5;
                 } else {
-                    p.rotation -= 6;
+                    p.rotation -= 5;
                 }
                 changed = true;
             }

@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class PlayerHandler {
 
     static final int mapSize = 1024;
-    static ConcurrentHashMap<String, Player>[][] players = new ConcurrentHashMap[mapSize][mapSize];
+    static ConcurrentHashMap<Integer, Player>[][] players = new ConcurrentHashMap[mapSize][mapSize];
 
     public static void init() {
         for (int i = 0; i < mapSize; i++) {
@@ -21,7 +21,7 @@ public class PlayerHandler {
 
     public static void setPlayerMessage(Player p, int x, int y, String message) {
         //Todo, overflow protection        
-        Player target = players[p.x / 10][p.y / 10].get(p.name);
+        Player target = players[p.x / 10][p.y / 10].get(p.id);
         if (target != null) {
             target.message = message;
         }
@@ -29,9 +29,9 @@ public class PlayerHandler {
 
     public static void movePlayer(Player p, int x, int y) {
         //Todo, overflow protection        
-        if (players[p.x / 10][p.y / 10].get(p.name) != null) {
-            players[p.x / 10][p.y / 10].remove(p.name);
-            players[(p.x + x) / 10][(p.y + y) / 10].put(p.name, p);
+        if (players[p.x / 10][p.y / 10].get(p.id) != null) {
+            players[p.x / 10][p.y / 10].remove(p.id);
+            players[(p.x + x) / 10][(p.y + y) / 10].put(p.id, p);
             p.x += x;
             p.y += y;
         }
@@ -48,14 +48,14 @@ public class PlayerHandler {
     
     public static void addPlayer(Player p) {
         //Todo, overflow protection        
-        players[p.x / 10][p.y / 10].put(p.name, p);
+        players[p.x / 10][p.y / 10].put(p.id, p);
     }
 
     public static void removePlayer(Player p) {
         //Todo, overflow protection     
-        if (players[p.x / 10][p.y / 10].get(p.name) != null) {
-            players[p.x / 10][p.y / 10].remove(p.name);
-            if (players[p.x / 10][p.y / 10].get(p.name) != null) {
+        if (players[p.x / 10][p.y / 10].get(p.id) != null) {
+            players[p.x / 10][p.y / 10].remove(p.id);
+            if (players[p.x / 10][p.y / 10].get(p.id) != null) {
                 System.out.println("Fatal: player remove failed -- 2");
             }
         } else {

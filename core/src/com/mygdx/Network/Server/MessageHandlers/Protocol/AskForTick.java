@@ -19,7 +19,7 @@ public class AskForTick {
     //Builds PlayerOverNetwork from provided player instance
     private static PlayerOverNetwork buildPON(Player p) {
         PlayerOverNetwork pon = new PlayerOverNetwork();
-        pon.name = p.name;
+        pon.id = p.id;
         pon.message = p.message;
         pon.x = p.x;
         pon.y = p.y;
@@ -29,6 +29,8 @@ public class AskForTick {
         pon.fightable = p.fightable;
         pon.customMenuOptions = new String[p.customMenuOptions.size()];
         pon.targetRotation = p.targetRotation;
+        pon.nameSwap = p.nameSWAP;
+        System.out.println(pon.nameSwap);
         
         //Add custom menu options to this PON
         int index = 0;
@@ -77,7 +79,7 @@ public class AskForTick {
             //Adds PON instance build from Player to the answer packet.
             msg.playerList.add(buildPON(p));
 
-            if (p.name.equals(character.name)) {
+            if (p.id == (character.id)) {
                 pointerToPlayer = msg.playerList.get(msg.playerList.size() - 1);
             }
         }

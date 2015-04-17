@@ -16,8 +16,8 @@ public class UseCustomMenuOption {
         return Math.abs(source.x - target.x) <= 32 && Math.abs(source.y - target.y) <= 32;
     }
 
-    public static boolean targetHasCustomOptionWithThisId(Player target, int id) {
-        System.out.println("Target name: " + target.name);
+    public static boolean targetHasCustomOptionWithThisId(Player target, int id) {        
+        System.out.println("Target name: " + target.id);
         System.out.println(target.customMenuOptions.size());
         System.out.println(id);
         return (target.customMenuOptions.size() >= id);
@@ -42,7 +42,7 @@ public class UseCustomMenuOption {
 
         if (targetIsValid(character, target, id)) {
             System.out.println("Target is valid");
-            System.out.println(target.name);
+            System.out.println(target.id);
             System.out.println(target.customMenuOptions.get(id).getName());
             target.customMenuOptions.get(id).onAction(character);
         } else {

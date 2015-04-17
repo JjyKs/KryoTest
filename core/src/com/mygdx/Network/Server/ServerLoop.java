@@ -1,6 +1,7 @@
 package com.mygdx.Network.Server;
 
 import com.mygdx.Network.Server.DataStructureHandlers.PlayerHandler;
+import com.mygdx.Network.Server.Misc.IdGenerator;
 import com.mygdx.Network.Server.Quests.CooksAssistant.CooksAssistantInit;
 import com.mygdx.Network.Server.Scripts.Daniel;
 import com.mygdx.Network.Server.Scripts.DeathCheck;
@@ -14,11 +15,11 @@ import java.util.concurrent.TimeUnit;
 public class ServerLoop extends Thread {
 
     private Thread t;
-    ConcurrentHashMap<String, Player> loggedIn;
+    ConcurrentHashMap<Integer, Player> loggedIn;
     Map map;
     private String threadName = "serverLoop";
 
-    public ServerLoop(ConcurrentHashMap<String, Player> loggedIn, Map map) {
+    public ServerLoop(ConcurrentHashMap<Integer, Player> loggedIn, Map map) {
         this.loggedIn = loggedIn;
         this.map = map;
     }
@@ -76,16 +77,13 @@ public class ServerLoop extends Thread {
     }
 
     public void movePlayer(Player p, Map map, int amount) {
-        boolean xMoved = false;
         p.targetRotation = 0;
         if (p.x < p.xTarget && map.map[(p.x + 33) / 32][(p.y) / 32].walkable) {
             PlayerHandler.movePlayer(p, amount, 0);
-            xMoved = true;
             p.targetRotation = 1;
         }
         if (p.x >= 32 && p.x > p.xTarget && map.map[(p.x - 33) / 32][(p.y) / 32].walkable) {
             PlayerHandler.movePlayer(p, -amount, 0);
-            xMoved = true;
             p.targetRotation = 2;
         }
         if (p.y < p.yTarget && map.map[(p.x) / 32][(p.y + 33) / 32].walkable) {
@@ -104,13 +102,14 @@ public class ServerLoop extends Thread {
         CooksAssistantInit.init(loggedIn);
         Player daniel = new Player();
         daniel.health = 5;
-        daniel.name = "Daniel";
+        daniel.id = IdGenerator.getID();
         daniel.npc = true;
         daniel.variableTickedScripts.add(new Daniel(daniel));
         daniel.variableTickedScripts.add(new Test(daniel));
         daniel.variableTickedScripts.add(new DeathCheck(daniel));
+        daniel.nameSWAP = "Daniel";
         PlayerHandler.addPlayer(daniel);
-        loggedIn.put(daniel.name, daniel);
+        loggedIn.put(daniel.id, daniel);
 
         while (true) {
             long startTime = System.nanoTime();

@@ -21,7 +21,7 @@ public class Login {
         }
 
         // Reject if the name is invalid.
-        String name = ((Network.Login) object).name;
+        String name = ((Network.Login) object).id;
         if (!operator.isValid(name)) {
             c.close();
             return;
